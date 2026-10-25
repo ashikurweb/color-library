@@ -1,0 +1,6022 @@
+@property --fade-start {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0rem;
+}
+
+@property --fade-end {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0rem;
+}
+
+:root {
+  --ink: #000;
+  --paper: #fff;
+
+  --fg: var(--ink);
+  --bg: var(--paper);
+
+  --font: "Inter", system-ui, -apple-system, sans-serif;
+
+  --text-xs: clamp(0.72rem, 0.68rem + 0.2vw, 0.82rem);
+  --text-base: clamp(1rem, 0.94rem + 0.3vw, 1.18rem);
+  --text-lg: clamp(1.4rem, 1.1rem + 1.4vw, 2.1rem);
+  --lead-inset: var(--text-lg);
+  --text-xl: clamp(2.2rem, 1.4rem + 3.6vw, 4rem);
+  --text-2xl: clamp(3rem, 1.4rem + 7.2vw, 7rem);
+  --text-mega: clamp(4.5rem, 1rem + 15vw, 13rem);
+
+  --weight-body: 400;
+  --weight-label: 600;
+  --weight-display: 850;
+
+  --space-2xs: 0.5rem;
+  --space-xs: 0.875rem;
+  --space-s: 1.5rem;
+  --space-m: 2.5rem;
+  --space-l: 5rem;
+  --space-xl: 9rem;
+
+  --line: 2px;
+  --gutter: clamp(1.5rem, 6vw, 7rem);
+  --bar-h: 3.2rem;
+  --measure: 38ch;
+
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-weight: var(--weight-body);
+  font-size: var(--text-base);
+  line-height: 1.5;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: from-font;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: var(--line) solid var(--fg);
+  outline-offset: 4px;
+}
+
+.slide {
+  --bg: var(--paper);
+  --fg: var(--ink);
+  color: var(--fg);
+  background: var(--bg);
+  min-height: 100svh;
+  padding: var(--space-xl) var(--gutter);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-m);
+}
+
+/* display: flex above would otherwise show a hidden slide */
+.slide[hidden] {
+  display: none;
+}
+
+.slide--invert {
+  --bg: var(--ink);
+  --fg: var(--paper);
+}
+
+.slide--dense {
+  gap: var(--space-s);
+}
+
+.label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.display {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-display);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.lead {
+  font-size: var(--text-lg);
+  font-weight: 100;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  max-width: 30ch;
+  margin: 0;
+  margin-inline-start: var(--lead-inset);
+  text-wrap: balance;
+}
+
+.prose {
+  max-width: var(--measure);
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.prose + .prose {
+  margin-top: var(--space-s);
+}
+
+.hero__title {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-display);
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+/* a page that isn't there: #404404 in the middle of a slowly turning spiral of names */
+.not-found {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  overflow: hidden;
+}
+
+/* the whole drawing turns, as one picture on the GPU: drawn once, not every frame */
+.not-found__wheel {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  inline-size: max(100vw, 150vmin, 40rem);
+  translate: -50% -50%;
+  will-change: rotate;
+  animation: not-found-spin 150s linear infinite;
+  font-family: Inter, sans-serif;
+  font-weight: 600;
+}
+
+/* the names come in from the middle outwards, one every 50ms */
+.not-found__wheel a,
+.not-found__wheel textPath > tspan {
+  opacity: 0;
+  transition: opacity 0.5s ease calc(var(--k) * 50ms);
+}
+
+.not-found__wheel.is-in a,
+.not-found__wheel.is-in textPath > tspan {
+  opacity: 1;
+}
+
+.not-found__wheel a {
+  text-decoration: none;
+}
+
+.not-found__wheel a:hover tspan {
+  text-decoration: underline;
+}
+
+@keyframes not-found-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .not-found__wheel {
+    animation: none;
+  }
+
+  .not-found__wheel a,
+  .not-found__wheel textPath > tspan {
+    transition: none;
+  }
+}
+
+.not-found__content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  text-align: center;
+  pointer-events: none;
+}
+
+.not-found__content a {
+  pointer-events: auto;
+}
+
+.not-found__hex {
+  margin: 0;
+  font-size: clamp(2rem, 8vmin, 4.5rem);
+  font-weight: var(--weight-display);
+  letter-spacing: -0.03em;
+  font-feature-settings: "tnum" 1;
+}
+
+.not-found__lead {
+  margin: 0;
+  max-width: 16em;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  text-transform: uppercase;
+}
+
+.not-found__more {
+  margin: var(--space-xs) 0 0;
+}
+
+.legal__content {
+  inline-size: min(100%, 40rem);
+  margin-block: var(--space-l);
+}
+
+.legal__content .prose {
+  max-width: 60ch;
+}
+
+.legal__content .hero__title {
+  margin-block-end: var(--space-m);
+}
+
+.legal__content .label {
+  margin-block: var(--space-m) var(--space-2xs);
+}
+
+.hero__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs) var(--space-s);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  text-transform: uppercase;
+}
+
+.hero__stats a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3em;
+}
+
+.hero__stats a:hover,
+.hero__stats a:focus-visible {
+  text-decoration-thickness: 2px;
+}
+
+/* on a color's page the hex, then when it was added and who adopted it, one under the other */
+.hero__stats[data-stats] {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  justify-items: start;
+}
+
+.hero__stats[data-stats] .hero__adopted {
+  grid-column: 2;
+}
+
+/* the button starts the line, a little apart */
+.hero__stats[data-stats] .hero__adopted:has(.adopt-cta) {
+  grid-column: 1 / -1;
+}
+
+.hero__stats a.adopt-cta {
+  margin-block-start: var(--space-s);
+}
+
+.hero__adopted:empty {
+  display: none;
+}
+
+/* the heart in the color itself, outlined in the button's ink; over the button it swells out
+   past its right end, a little differently each time (adopter.js) */
+.hero__heart {
+  inline-size: 1.4em;
+  block-size: 1.27em;
+  margin-block: -0.5em;
+  overflow: visible;
+  fill: var(--page-color, var(--bg));
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  paint-order: stroke;
+  transition:
+    scale 0.45s cubic-bezier(0.3, 1.6, 0.5, 1),
+    translate 0.45s cubic-bezier(0.3, 1.6, 0.5, 1),
+    rotate 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+/* and round that, a thin line in the button's own color, for where it swells past it */
+.hero__heart-edge {
+  fill: none;
+  stroke: var(--fg);
+  stroke-width: 3.4;
+}
+
+.adopt-cta:hover .hero__heart,
+.adopt-cta:focus-visible .hero__heart,
+.footer__adopt a:hover .hero__heart,
+.footer__adopt a:focus-visible .hero__heart,
+.adopt__cta:not([aria-disabled="true"]):hover .hero__heart,
+.adopt__cta:not([aria-disabled="true"]):focus-visible .hero__heart {
+  scale: var(--heart-scale, 2);
+  translate: var(--heart-x, 0.7em) var(--heart-y, -0.1em);
+  rotate: var(--heart-turn, 10deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__heart {
+    transition: none;
+  }
+}
+
+.hero__adopter,
+.hero__patron {
+  text-transform: none;
+}
+
+.adopt__tiers {
+  display: grid;
+  gap: var(--space-2xs);
+  margin: var(--space-s) 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-base);
+}
+
+.adopt__tiers[hidden] {
+  display: none;
+}
+
+.adopt .hero__title,
+.supporters .hero__title {
+  font-size: clamp(2.6rem, 1.8rem + 3.6vw, 5.2rem);
+  line-height: 0.95;
+  margin-block-end: var(--space-s);
+}
+
+.adopt__tiers li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+}
+
+.adopt__tiers b {
+  flex: none;
+  min-inline-size: 2.4em;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-display);
+  letter-spacing: -0.02em;
+}
+
+/* a strip of foil: a rainbow sheen that drifts by exactly one of its (seamless) tiles,
+   with fine diagonal lines over it */
+.adopt__holo {
+  display: inline-block;
+  padding: 0.05em 0.6em 0.1em;
+  border-radius: 999px;
+  color: var(--ink);
+  font-style: normal;
+  font-weight: 600;
+  background:
+    repeating-linear-gradient(115deg, rgb(255 255 255 / 0.35) 0 2px, transparent 2px 5px),
+    linear-gradient(90deg, #ff9ad5, #ffd6a1, #fdff9e, #a6ffd8, #a6e3ff, #c3a6ff, #ff9ad5);
+  background-size:
+    auto,
+    12em 100%;
+  background-repeat: repeat, repeat-x;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.6);
+  animation: holo-drift 5s linear infinite;
+}
+
+@keyframes holo-drift {
+  from {
+    background-position:
+      0 0,
+      0 0;
+  }
+  to {
+    background-position:
+      0 0,
+      12em 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .adopt__holo {
+    animation: none;
+  }
+}
+
+.adopt__act {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs) var(--space-s);
+  margin: var(--space-m) 0 0;
+}
+
+.adopt__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.85rem 1.6rem;
+  border-radius: 999px;
+  color: var(--ink);
+  background: var(--paper);
+  font-weight: var(--weight-display);
+  text-decoration: none;
+  transition: scale 0.2s ease;
+}
+
+.adopt__cta:hover,
+.adopt__cta:focus-visible {
+  scale: 1.04;
+}
+
+.adopt__pick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  margin: var(--space-m) 0 0;
+  font-size: var(--text-lg);
+  font-weight: 300;
+}
+
+/* over the wheel and the name it lands on, a line of its own */
+.adopt__pick-label {
+  flex-basis: 100%;
+}
+
+/* the wheel and the name it lands on, one pill that opens the wheel, as the search bar */
+.adopt__pick-label {
+  cursor: pointer;
+}
+
+.adopt__named {
+  white-space: nowrap;
+}
+
+/* a taken color's free neighbors, each a dot and its name to adopt instead */
+.adopt__others {
+  max-inline-size: 40rem;
+  margin: var(--space-m) 0 0;
+  line-height: 1.8;
+}
+
+.adopt__others[hidden] {
+  display: none;
+}
+
+.adopt__others a {
+  color: inherit;
+}
+
+.adopt__named::before {
+  content: "";
+  display: inline-block;
+  inline-size: 0.7em;
+  block-size: 0.7em;
+  margin-inline-end: 0.3em;
+  border-radius: 50%;
+  vertical-align: -0.05em;
+  background: var(--c);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.35);
+}
+
+.adopt__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 0.35rem 1.2rem 0.35rem 0.35rem;
+  border-radius: 999px;
+  color: var(--ink);
+  background: var(--paper);
+  font-size: var(--text-base);
+  font-weight: 400;
+  cursor: pointer;
+}
+
+/* one ring when it's reached by keyboard, around the pill only */
+.adopt__pill input:focus-visible {
+  outline: none;
+}
+
+.adopt__pill:has(input:focus-visible) {
+  outline: var(--line) solid var(--paper);
+  outline-offset: 3px;
+}
+
+/* in the pill the wheel needs no rings of its own */
+.adopt__pill .adopt__wheel.wall__picker {
+  box-shadow: none;
+  outline: none;
+}
+
+.adopt__pick[hidden] {
+  display: none;
+}
+
+/* the search bar's wheel, here in the flow and a little larger */
+.adopt__wheel.wall__picker {
+  position: relative;
+  inset: auto;
+  translate: none;
+  flex: none;
+  inline-size: 2.4rem;
+  block-size: 2.4rem;
+  box-shadow:
+    inset 0 0 0 2px var(--ink),
+    0 0 0 2px var(--picked, transparent);
+}
+
+.adopt__who {
+  display: grid;
+  gap: var(--space-2xs);
+  margin: var(--space-m) 0 0;
+  max-inline-size: 28rem;
+}
+
+.adopt__who[hidden] {
+  display: none;
+}
+
+.adopt__who-row {
+  display: flex;
+  gap: var(--space-2xs);
+}
+
+.adopt__who select,
+.adopt__who input {
+  min-inline-size: 0;
+  padding: 0.7rem 1rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+}
+
+.adopt__who select {
+  flex: none;
+  appearance: none;
+  padding-inline-end: 2.6rem;
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position:
+    calc(100% - 1.35rem) 55%,
+    calc(100% - 1rem) 55%;
+  background-size: 0.35rem 0.35rem;
+  background-repeat: no-repeat;
+}
+
+/* in from the edge as far as the fields' own text and icons */
+.adopt__who .adopt__note {
+  padding-inline: calc(1rem + 1px);
+}
+
+.adopt__who .adopt__note:empty {
+  display: none;
+}
+
+.adopt__who select option {
+  color: var(--ink);
+}
+
+/* each way to be shown with its mark, where the select can hold more than text; elsewhere
+   the options are their words alone */
+.adopt__on-icon {
+  flex: none;
+  inline-size: 1.1em;
+  block-size: 1.1em;
+  fill: currentColor;
+}
+
+.adopt__on-icon .is-line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+@supports (appearance: base-select) {
+  .adopt__who select,
+  .adopt__who ::picker(select) {
+    appearance: base-select;
+  }
+
+  .adopt__who select {
+    padding-inline-end: 1rem;
+    background-image: none;
+  }
+
+  .adopt__who selectedcontent,
+  .adopt__who select option {
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+  }
+
+  .adopt__who ::picker(select) {
+    margin-block: var(--space-2xs);
+    padding: 0.4rem;
+    border: 1px solid currentColor;
+    border-radius: 1.2rem;
+    color: var(--fg);
+    background: var(--bg);
+  }
+
+  .adopt__who select option {
+    padding: 0.55rem 0.8rem;
+    border-radius: 0.8rem;
+    color: inherit;
+  }
+
+  .adopt__who select option:hover,
+  .adopt__who select option:focus-visible {
+    outline: none;
+    color: var(--bg);
+    background: var(--fg);
+  }
+
+  .adopt__who select option:checked {
+    font-weight: var(--weight-label);
+  }
+
+  .adopt__who select option::checkmark {
+    display: none;
+  }
+}
+
+.adopt__by {
+  position: relative;
+  display: flex;
+  flex: 1;
+}
+
+.adopt__by[hidden] {
+  display: none;
+}
+
+.adopt__by input {
+  flex: 1;
+}
+
+/* who was found, in the field: only on a phone, where the card is out of sight */
+.adopt__by .card-badge {
+  display: none;
+}
+
+/* on a phone: where you're known on one line, the name on the next, each the full width */
+@media (max-width: 40rem) {
+  .adopt__who-row {
+    flex-direction: column;
+  }
+
+  .adopt__by:has(.card-badge) input {
+    padding-inline-end: 3.2rem;
+  }
+
+  .adopt__by .card-badge {
+    inset: 50% 0.4rem auto auto;
+    display: grid;
+    inline-size: 2.2rem;
+    block-size: 2.2rem;
+    translate: 0 -50%;
+    box-shadow: none;
+    font-size: var(--text-xs);
+    animation: none;
+  }
+
+  .adopt__by .card-badge--founding {
+    box-shadow: 0 0 0 2px #e9b52b;
+  }
+}
+
+/* wider, one field split in two: the select's end and the input's start meet in a single line */
+@media (min-width: 40.01rem) {
+  .adopt__who-row {
+    gap: 0;
+  }
+
+  .adopt__who-row:has(.adopt__by:not([hidden])) select {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+    border-inline-end: 0;
+  }
+
+  .adopt__who-row input {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+  }
+}
+
+.adopt__cta[aria-disabled="true"] {
+  opacity: 0.5;
+}
+
+.adopt__share-card {
+  display: block;
+  inline-size: min(100%, 26rem);
+  block-size: auto;
+  margin: var(--space-m) 0 0;
+  border-radius: 0.4rem;
+  box-shadow: 0 0.8rem 2rem rgb(0 0 0 / 0.5);
+}
+
+.adopt__share-card[hidden] {
+  display: none;
+}
+
+.adopt__share {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin: var(--space-s) 0 0;
+}
+
+.adopt__act[hidden],
+.hero__stats[hidden],
+.adopt__share[hidden] {
+  display: none;
+}
+
+.adopt__share a,
+.adopt__share button {
+  padding: 0.55rem 1.1rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  color: inherit;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.adopt__share button {
+  font-family: inherit;
+  letter-spacing: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.adopt__share a:hover,
+.adopt__share a:focus-visible,
+.adopt__share button:hover,
+.adopt__share button:focus-visible {
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.adopt__founding {
+  margin: var(--space-s) 0 0;
+  font-size: var(--text-xs);
+}
+
+.adopt__founding b {
+  background: linear-gradient(160deg, #fff1b0, #f2c230 55%, #c8901a);
+  background-clip: text;
+  color: transparent;
+}
+
+.adopt__founding[hidden] {
+  display: none;
+}
+
+/* the closing white section: what else a patron keeps going */
+.adopt-more {
+  min-height: auto;
+  gap: var(--space-m);
+  padding-block: var(--space-l);
+}
+
+.adopt-more__about {
+  max-width: 40ch;
+}
+
+.adopt-more__about a {
+  color: inherit;
+}
+
+.adopt-projects {
+  display: grid;
+  gap: var(--space-s);
+  max-width: 40rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.adopt-projects a {
+  color: inherit;
+  font-weight: var(--weight-display);
+  text-decoration: none;
+}
+
+.adopt-projects a:hover,
+.adopt-projects a:focus-visible {
+  text-decoration: underline;
+}
+
+.adopt-projects small {
+  margin-inline-start: 0.3em;
+  font-size: var(--text-xs);
+  opacity: 0.6;
+}
+
+.adopt-projects p {
+  margin: 0.15em 0 0;
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  opacity: 0.75;
+}
+
+.adopt .color-hero__card {
+  transition: opacity 0.3s ease;
+}
+
+.adopt .color-hero__card.is-away {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.adopt__legal {
+  margin: var(--space-s) 0 0;
+  font-size: var(--text-xs);
+  opacity: 0.75;
+}
+
+.adopt__note {
+  font-size: var(--text-xs);
+  opacity: 0.75;
+}
+
+.supporters__content {
+  inline-size: min(100%, 48rem);
+}
+
+.supporters__stats {
+  margin-block-start: var(--space-s);
+}
+
+/* the running costs, on paper below the patrons */
+.costs__lead,
+.costs__list,
+.costs__bar {
+  max-inline-size: 36rem;
+}
+
+.costs__list {
+  display: grid;
+  gap: var(--space-2xs);
+  margin: 0;
+}
+
+.costs__list > div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-s);
+}
+
+.costs__list dd {
+  margin: 0;
+  font-feature-settings: "tnum" 1;
+  white-space: nowrap;
+}
+
+.costs__sum {
+  margin-block: var(--space-2xs) var(--space-s);
+  font-weight: var(--weight-display);
+}
+
+.costs__bar {
+  margin-block-start: var(--space-m);
+}
+
+.costs__bar[hidden] {
+  display: none;
+}
+
+/* a line for each year covered, ten of them */
+.costs__years {
+  display: flex;
+  gap: 0.25rem;
+  margin: 0 0 0.35rem;
+  padding: 0;
+  list-style: none;
+}
+
+/* the line, with a strip of room above and below to reach it by */
+.costs__years li {
+  position: relative;
+  flex: 1;
+  block-size: 1.1rem;
+  margin-block: -0.6rem -0.3rem;
+}
+
+/* hovered, the line grows upwards, round its year */
+.costs__years li::before {
+  content: attr(data-year);
+  position: absolute;
+  inset: auto 0 0.3rem;
+  display: grid;
+  place-items: center;
+  block-size: 0.2rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--fg) 15%, transparent);
+  color: transparent;
+  font-size: var(--text-xs);
+  line-height: 1;
+  transition:
+    block-size 0.2s,
+    color 0.2s;
+}
+
+.costs__years li.is-full::before {
+  background: #f2c230;
+}
+
+.costs__years li:hover::before {
+  block-size: 1.4rem;
+  color: var(--fg);
+}
+
+/* dark on the gold, on the dark slide too */
+.costs__years li.is-full:hover::before {
+  color: var(--ink);
+}
+
+/* and over a covered one, that it was; the later ones held to the right, not past the bar */
+.costs__years li.is-full::after {
+  content: attr(data-year) " fully funded";
+  position: absolute;
+  inset-block-end: 2.1rem;
+  inset-inline-start: 0;
+  white-space: nowrap;
+  font-size: var(--text-xs);
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.costs__years li.is-full:nth-child(n + 6)::after {
+  inset-inline: auto 0;
+}
+
+.costs__years li.is-full:hover::after {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .costs__years li::before,
+  .costs__years li::after {
+    transition: none;
+  }
+}
+
+.costs__track {
+  block-size: 0.6rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 15%, transparent);
+  overflow: hidden;
+}
+
+.costs__fill {
+  display: block;
+  block-size: 100%;
+  inline-size: calc(var(--k, 0) * 100%);
+  border-radius: inherit;
+  background: linear-gradient(90deg, #fff1b0, #f2c230 55%, #c8901a);
+}
+
+.adopt__costs {
+  max-inline-size: 36rem;
+  margin-block: var(--space-s);
+}
+
+.costs__note a {
+  color: inherit;
+}
+
+.costs__note {
+  margin: var(--space-2xs) 0 0;
+  font-size: var(--text-xs);
+  opacity: 0.75;
+}
+
+.supporters__list {
+  display: grid;
+  gap: var(--space-m);
+  margin: var(--space-l) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* the rank on top of the face, however long the number gets */
+.supporter {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--space-2xs) var(--space-s);
+}
+
+.supporter__rank {
+  grid-column: 1;
+  justify-self: center;
+  line-height: 1;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-display);
+  letter-spacing: -0.02em;
+  font-feature-settings: "tnum" 1;
+}
+
+/* the first three in metal: gold, silver, bronze */
+.supporter:nth-child(-n + 3) .supporter__rank {
+  background: linear-gradient(160deg, var(--metal-hi) 20%, var(--metal) 45%, var(--metal-lo) 60%, var(--metal-hi) 85%);
+  background-clip: text;
+  color: transparent;
+}
+
+.supporter:nth-child(1) {
+  --metal-hi: #fff1b0;
+  --metal: #f2c230;
+  --metal-lo: #a8740d;
+}
+
+.supporter:nth-child(2) {
+  --metal-hi: #ffffff;
+  --metal: #c9ced6;
+  --metal-lo: #7d8590;
+}
+
+.supporter:nth-child(3) {
+  --metal-hi: #ffd9b0;
+  --metal: #d4884a;
+  --metal-lo: #8a4a1c;
+}
+
+.supporter .supporter__face {
+  position: relative;
+  right: auto;
+  bottom: auto;
+  grid-column: 1;
+  grid-row: 2;
+  align-self: start;
+  transform: none;
+  animation: none;
+}
+
+/* the name on the rank's line, the colors beside the face */
+.supporter__who {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.supporter__colors {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+}
+
+.supporter__name {
+  color: inherit;
+  font-weight: var(--weight-display);
+  text-decoration: none;
+}
+
+/* whole, on the name's line if it fits, else on the next: a box of its own lets the line
+   break before it, never inside it */
+/* the one a color's page sent here for, lit for a moment */
+.supporter.is-asked {
+  animation: supporter-asked 2.4s ease-out;
+}
+
+@keyframes supporter-asked {
+  from,
+  40% {
+    background: rgb(255 255 255 / 0.14);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .supporter.is-asked {
+    animation: none;
+    background: rgb(255 255 255 / 0.08);
+  }
+}
+
+.supporter__founding {
+  display: inline-block;
+  margin-inline-start: 0.6em;
+  padding: 0.15em 0.6em;
+  border-radius: 999px;
+  color: #3a2a00;
+  background: linear-gradient(160deg, #fff1b0, #f2c230 55%, #c8901a);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+  vertical-align: 0.15em;
+}
+
+/* on a phone: rank and face on top, then the name, then the colors, each the full width */
+@media (max-width: 40rem) {
+  .supporter {
+    grid-template-columns: auto 1fr;
+    align-items: center;
+  }
+
+  .supporter__rank,
+  .supporter .supporter__face {
+    grid-column: auto;
+    grid-row: auto;
+    justify-self: start;
+  }
+
+  .supporter .supporter__face {
+    justify-self: start;
+  }
+
+  .supporter__who,
+  .supporter__colors {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    align-self: auto;
+  }
+}
+
+/* their colors as little cards, each leaning its own way, a little stacked */
+.supporter__colors {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.4rem 0 0.2rem 0.3rem;
+}
+
+.supporter__color {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  inline-size: 4.6rem;
+  block-size: calc(4.6rem + 1.46em);
+  margin-inline-end: -1.1rem;
+  overflow: hidden;
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow: 0 0.3rem 0.8rem rgb(0 0 0 / 0.45);
+  font-size: calc(4.6rem * 0.205); /* as .swatchcard: 0.205 of the card's width */
+  text-decoration: none;
+  rotate: calc(-10deg + var(--r, 1) * 10deg);
+  transition:
+    rotate 0.25s ease,
+    translate 0.25s ease;
+}
+
+.supporter__color i {
+  flex: none;
+  aspect-ratio: 1;
+  background: var(--c);
+}
+
+/* as .swatchcard's label: a strip 1.46 high, the hex bold, the name light under it */
+.supporter__color b,
+.supporter__color span {
+  display: block;
+  overflow: hidden;
+  height: 1.2em;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.supporter__color b {
+  margin-top: 0.45em;
+  padding-inline: calc(0.3em / 0.55);
+  font-size: 0.55em;
+  font-weight: 700;
+  font-feature-settings: "tnum" 1;
+}
+
+.supporter__color span {
+  margin-top: -0.05em;
+  padding-inline: calc(0.3em / 0.27);
+  font-size: 0.27em;
+  font-weight: 300;
+}
+
+/* the empty first place: outlines where a patron and their colors will be */
+.supporter--ghost .supporter__face {
+  border: 2px dashed currentColor;
+  background: transparent;
+  color: inherit;
+}
+
+.supporter--ghost .supporter__name {
+  opacity: 0.6;
+}
+
+.supporter--ghost .supporter__color {
+  block-size: 5.6rem;
+  margin-inline-end: -0.6rem;
+  border: 2px dashed rgb(255 255 255 / 0.5);
+  color: rgb(255 255 255 / 0.6);
+  background: transparent;
+  box-shadow: none;
+}
+
+.supporter--ghost .supporter__color i {
+  background: transparent;
+}
+
+.supporter__color:hover,
+.supporter__color:focus-visible {
+  z-index: 1;
+  rotate: 0deg;
+  translate: 0 -0.4rem;
+}
+
+/* the adopter's face on the card's corner, upright, leaning less than the card */
+.card-badge {
+  position: absolute;
+  z-index: 3;
+  right: -1.1rem;
+  bottom: -1.1rem;
+  display: grid;
+  place-items: center;
+  inline-size: 3.4rem;
+  block-size: 3.4rem;
+  overflow: hidden;
+  border-radius: 50%;
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow:
+    0 0 0 3px var(--paper),
+    0 0.6rem 1.4rem rgb(0 0 0 / 0.35);
+  font-size: 1.3rem;
+  font-weight: var(--weight-display);
+  text-decoration: none;
+  transform: translate(var(--lean-x, 0), var(--lean-y, 0)) rotate(calc(var(--r, 0deg) * -1));
+  transition: transform 0.6s cubic-bezier(0.3, 0.7, 0, 1);
+}
+
+.card-badge--founding {
+  overflow: visible;
+  box-shadow:
+    0 0 0 4px #e9b52b,
+    0 0.6rem 1.4rem rgb(0 0 0 / 0.35);
+}
+
+.card-badge--founding img,
+.card-badge--founding > span {
+  border-radius: 50%;
+}
+
+/* now and then a glint runs round the gold ring: one turning layer, masked to the ring */
+.card-badge--founding::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0 66%,
+    rgb(255 255 255 / 0.55) 76%,
+    #fff 83%,
+    rgb(255 255 255 / 0.55) 89%,
+    transparent 97%
+  );
+  -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 4.5px), #000 calc(100% - 4px));
+  mask: radial-gradient(closest-side, transparent calc(100% - 4.5px), #000 calc(100% - 4px));
+  pointer-events: none;
+  animation: ring-glint 7s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+
+@keyframes ring-glint {
+  0%,
+  72% {
+    rotate: 0deg;
+    opacity: 0;
+  }
+  74% {
+    opacity: 1;
+  }
+  98% {
+    opacity: 1;
+  }
+  100% {
+    rotate: 1turn;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-badge--founding::after {
+    display: none;
+  }
+}
+
+.card-badge img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/* pressed on last, once the card and its foil are in */
+.card-badge {
+  animation: badge-in 0.55s cubic-bezier(0.3, 1.6, 0.5, 1) 1.8s backwards;
+}
+
+@keyframes badge-in {
+  from {
+    opacity: 0;
+    scale: 0.2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-badge {
+    animation: none;
+  }
+}
+
+.figure {
+  font-size: var(--text-mega);
+  font-weight: var(--weight-display);
+  line-height: 0.85;
+  letter-spacing: -0.035em;
+  margin: 0;
+}
+
+.rules {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-s);
+  max-width: 40ch;
+}
+
+.rules li {
+  font-size: var(--text-base);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-s);
+}
+
+.rules li:not(:last-child)::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border: 1.5px solid var(--fg);
+  border-radius: 50%;
+}
+
+.code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: var(--text-base);
+  border: var(--line) solid var(--fg);
+  padding: var(--space-xs) var(--space-s);
+  display: inline-block;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.formats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  max-width: 40ch;
+}
+
+.formats li {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  text-transform: uppercase;
+  border: var(--line) solid var(--fg);
+  padding: 0.35em 0.7em;
+}
+
+.btn {
+  font-size: var(--text-base);
+  font-weight: var(--weight-label);
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  border: var(--line) solid var(--fg);
+  padding: var(--space-xs) var(--space-m);
+  transition:
+    color 0.15s,
+    background-color 0.15s;
+}
+
+.btn:hover {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.footer {
+  min-height: auto;
+  gap: var(--space-m);
+  padding-block: var(--space-l);
+}
+
+.footer__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-s) var(--space-m);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  text-transform: uppercase;
+}
+
+.footer__share {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  min-inline-size: 0;
+}
+
+.footer__share a {
+  overflow-wrap: anywhere;
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+.footer__share button {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: 2rem;
+  block-size: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--fg);
+  background: none;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.footer__share button svg {
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+}
+
+.footer__share button:hover,
+.footer__share button:focus-visible {
+  outline: none;
+  color: var(--bg);
+  background: var(--fg);
+}
+
+/* the adopt button again, in the page's own colors */
+.footer__adopt {
+  margin: 0;
+}
+
+.footer__adopt[hidden] {
+  display: none;
+}
+
+/* the adopt button, at the end of a color's page and under its title */
+.footer__adopt a,
+.hero__stats a.adopt-cta,
+.not-found__more a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7em;
+  padding: 0.75rem 1.3rem;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-display);
+  text-transform: uppercase;
+  border-radius: 999px;
+  color: var(--bg);
+  background: var(--fg);
+  text-decoration: none;
+  transition: scale 0.2s ease;
+}
+
+/* the heart's box is wider than the heart, so its side gets less room to look even */
+.footer__adopt a:has(.hero__heart),
+.hero__stats a.adopt-cta {
+  padding-inline-end: 1.15rem;
+}
+
+.footer__adopt a:hover,
+.footer__adopt a:focus-visible,
+.not-found__more a:hover,
+.not-found__more a:focus-visible,
+.hero__stats a.adopt-cta:hover,
+.hero__stats a.adopt-cta:focus-visible {
+  scale: 1.04;
+}
+
+/* a section's link, beside its heading once you're over it */
+.color-page [id] {
+  scroll-margin-top: var(--space-m);
+}
+
+.anchor {
+  margin-inline-start: 0.25em;
+  color: inherit;
+  font-weight: 300;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+h2:hover > .anchor,
+.anchor:focus-visible {
+  opacity: 0.35;
+}
+
+.color-page .footer .footer__about {
+  max-width: 34ch;
+}
+
+.color-page .color-art {
+  position: relative;
+  block-size: 100svh;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* six rows in a window of about four and a half: cut at every edge */
+.gallery {
+  --row: 22svh;
+  --gap: 1rem;
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  translate: 0 -50%;
+  block-size: calc(6 * var(--row) + 5 * var(--gap));
+  row-gap: var(--gap);
+  overflow: hidden;
+  touch-action: pan-y;
+  cursor: grab;
+  perspective: 900px;
+  perspective-origin: 50% 50%;
+}
+
+.gallery.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.gallery__title {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.gallery__title[hidden] {
+  display: none;
+}
+
+.gallery__name {
+  margin: 0;
+  font-size: var(--text-xl);
+  text-align: left;
+}
+
+/* a color's name as pixel art, cut out, on the art section's card, its pixels kept sharp */
+.gallery__pixel {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+  pointer-events: auto;
+}
+
+.gallery__pixel canvas {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  image-rendering: pixelated;
+}
+
+.gallery__swatch {
+  container-type: inline-size;
+  flex: none;
+}
+
+.gallery__swatch .swatchcard {
+  inline-size: 100%;
+  font-size: 20.5cqi;
+}
+
+.slide:not(.slide--invert) .gallery__swatch .swatchcard__info {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.gallery__track {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition:
+    opacity 0.5s cubic-bezier(0.3, 0.7, 0, 1),
+    filter 0.5s cubic-bezier(0.3, 0.7, 0, 1);
+}
+
+.gallery.is-settled {
+  perspective: none;
+}
+
+.gallery.is-settled .gallery__track {
+  transform-style: flat;
+}
+
+.gallery .tile {
+  position: absolute;
+  left: 0;
+  margin: 0;
+  overflow: hidden;
+  opacity: 0;
+  translate: 0 0 -160px;
+  transition:
+    opacity 0.4s ease-out calc(var(--d, 0ms) + 120ms),
+    translate 0.7s cubic-bezier(0.2, 0.75, 0, 1) var(--d, 0ms);
+}
+
+.gallery.is-in .tile {
+  opacity: 1;
+  translate: 0 0 0;
+}
+
+.gallery.is-settled .tile {
+  translate: none;
+}
+
+.gallery.is-behind .gallery__track {
+  filter: blur(10px);
+  opacity: 0.55;
+}
+
+.tile__open {
+  position: relative;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  padding: 0;
+  border: 0;
+  background: var(--wash, none);
+  cursor: pointer;
+}
+
+.tile__open::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.28), transparent 40%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.tile__name,
+.tile__share {
+  position: absolute;
+  z-index: 1;
+  display: block;
+  padding: 0.25em 0.75em;
+  border-radius: 999px;
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* as palettes, the picture under the pointer is enough: for now, no pills */
+.tile__open:has(.tile__palette) :is(.tile__name, .tile__share) {
+  display: none;
+}
+
+.tile__name {
+  top: 0.5rem;
+  right: 0.5rem;
+  max-inline-size: calc(100% - 1rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #0a0a0a;
+  background: #fff;
+}
+
+.tile__share {
+  bottom: 0.5rem;
+  left: 0.5rem;
+  color: #fff;
+  background: rgb(40 40 40 / 0.45);
+  backdrop-filter: blur(10px);
+}
+
+@media (hover: hover) {
+  .gallery:not(.is-dragging) .tile:hover :is(.tile__name, .tile__share),
+  .gallery:not(.is-dragging) .tile:hover .tile__open::after {
+    opacity: 1;
+  }
+}
+
+.tile__open:focus-visible :is(.tile__name, .tile__share),
+.tile__open:focus-visible::after {
+  opacity: 1;
+}
+
+.tile__open:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: -2px;
+}
+
+.tile__open img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  -webkit-user-drag: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.tile__open img.is-loaded {
+  opacity: 1;
+}
+
+/* a work as its palette, the size of the picture: under the pointer its colors even out */
+.tile__palette {
+  display: flex;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.tile__palette i {
+  flex: var(--share) 1 0;
+  min-inline-size: min(1rem, 100% / var(--n));
+  transition: flex-grow 0.3s cubic-bezier(0.3, 0.7, 0, 1);
+}
+
+.tile__open:has(.tile__palette) {
+  background: none;
+}
+
+/* as palettes, the picture itself under the pointer, its palette round it as a frame */
+.tile__open img.tile__peek {
+  position: absolute;
+  inset: 1rem;
+  inline-size: calc(100% - 2rem);
+  block-size: calc(100% - 2rem);
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.3, 0.7, 0, 1);
+}
+
+@media (hover: hover) {
+  .gallery:not(.is-dragging) .tile:hover .tile__peek.is-loaded {
+    opacity: 1;
+  }
+}
+
+/* taller than wide: the colors in bands, top to bottom */
+.tile__palette--tall {
+  flex-direction: column;
+}
+
+.tile__palette--tall i {
+  min-inline-size: 0;
+  min-block-size: min(1rem, 100% / var(--n));
+}
+
+.gallery.is-even .tile__palette i {
+  flex-grow: 1;
+}
+
+@media (hover: hover) {
+  .gallery:not(.is-dragging) .tile:hover .tile__palette i {
+    flex-grow: 1;
+  }
+
+  /* the same width each: under the pointer, each its share */
+  .gallery.is-even:not(.is-dragging) .tile:hover .tile__palette i {
+    flex-grow: var(--share);
+  }
+}
+
+/* the art section's menu, as the wall's list of lists: a round button at the bottom left,
+   its choices above it */
+.art-settings {
+  position: absolute;
+  inset: auto auto var(--space-s) var(--space-s);
+  z-index: 3;
+}
+
+.art-settings > button {
+  display: grid;
+  place-items: center;
+  inline-size: 2.6rem;
+  block-size: 2.6rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--bg);
+  background: var(--fg);
+  cursor: pointer;
+}
+
+.art-settings > button svg {
+  display: block;
+  inline-size: 1.1rem;
+}
+
+.art-settings__menu {
+  position: absolute;
+  inset: auto auto calc(100% + 0.6rem) 0;
+  display: grid;
+  gap: 0.2rem;
+  min-inline-size: 15rem;
+  padding: 0.3rem;
+  border-radius: 1rem;
+  color: var(--bg);
+  background: var(--fg);
+}
+
+.art-settings__menu[hidden] {
+  display: none;
+}
+
+.art-settings__menu hr {
+  margin: 0.2rem 0.75rem;
+  border: 0;
+  border-top: 1px solid currentColor;
+  opacity: 0.2;
+}
+
+.art-settings__menu button {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-s);
+  padding: 0.5rem 0.75rem 0.5rem 2rem;
+  border: 0;
+  border-radius: 0.7rem;
+  color: inherit;
+  background: none;
+  font: inherit;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  text-align: start;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.art-settings__menu button small {
+  font-size: inherit;
+  font-weight: var(--weight-body);
+  opacity: 0.7;
+}
+
+/* a tick for what's on */
+.art-settings__menu button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0.8rem;
+  inline-size: 0.35rem;
+  block-size: 0.65rem;
+  border: solid currentColor;
+  border-width: 0 2px 2px 0;
+  opacity: 0;
+  translate: 0 -65%;
+  rotate: 45deg;
+}
+
+.art-settings__menu button[aria-checked="true"]::before {
+  opacity: 1;
+}
+
+/* a choice within the one above it */
+.art-settings__menu .art-settings__inset {
+  padding-inline-start: 3.25rem;
+}
+
+.art-settings__menu .art-settings__inset::before {
+  left: 2.05rem;
+}
+
+.art-settings__menu [aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: default;
+  pointer-events: none;
+}
+
+.art-settings__menu button:hover,
+.art-settings__menu button:focus-visible {
+  outline: none;
+  color: var(--fg);
+  background: var(--bg);
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: var(--gutter);
+}
+
+.lightbox__backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-out;
+}
+
+/* one white mount round the picture and its plaque */
+.lightbox__figure {
+  position: relative;
+  display: grid;
+  gap: var(--space-xs);
+  margin: 0;
+  margin-inline-end: 2.2rem;
+  color: var(--ink);
+  pointer-events: none;
+}
+
+.lightbox__frame {
+  position: relative;
+}
+
+.lightbox__mat {
+  position: absolute;
+  inset: calc(var(--space-xs) * -1);
+  background: var(--paper);
+  box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 0.18);
+}
+
+.lightbox__frame img {
+  position: relative;
+  display: block;
+  max-inline-size: min(64vw, 60rem);
+  max-block-size: min(70svh, 100svh - 16rem);
+  inline-size: auto;
+  block-size: auto;
+}
+
+/* pixel art opens as itself: no mount, its pixels sharp, as big as a picture */
+.lightbox--pixel .lightbox__mat {
+  display: none;
+}
+
+.lightbox--pixel .lightbox__frame img {
+  inline-size: min(64vw, 70svh, 40rem);
+  image-rendering: pixelated;
+}
+
+.lightbox--pixel .lightbox__info {
+  align-items: center;
+  text-align: center;
+}
+
+/* hung on the mount's right edge, as tall as it, a swatch per color by its share */
+.lightbox__palette {
+  position: absolute;
+  inset-block: calc(var(--space-xs) * -1);
+  left: calc(100% + var(--space-xs));
+  pointer-events: auto;
+}
+
+.lightbox__palette .art__palette {
+  flex-direction: column;
+  block-size: 100%;
+}
+
+.lightbox__palette .art__palette > a {
+  inline-size: 1.2rem;
+  min-inline-size: 0;
+  block-size: auto;
+  min-block-size: 0.6rem;
+  transform-origin: left;
+}
+
+.lightbox__palette .art__palette > a.is-match {
+  inline-size: 2.2rem;
+}
+
+.lightbox__palette .art__square {
+  top: 50%;
+  left: 0;
+  min-block-size: 0;
+  translate: 0 -50%;
+  transition:
+    inline-size 0.34s cubic-bezier(0.3, 0.7, 0, 1),
+    min-block-size 0.34s cubic-bezier(0.3, 0.7, 0, 1);
+}
+
+.lightbox__palette .art__palette > a:is(:hover, :focus-visible) .art__square {
+  inline-size: 4.5rem;
+  min-inline-size: 0;
+  block-size: 100%;
+  min-block-size: 4.5rem;
+}
+
+/* wider than tall: the palette along the mount's top edge instead */
+.lightbox--wide .lightbox__figure {
+  margin-inline-end: 0;
+  margin-block-start: 2.2rem;
+}
+
+.lightbox--wide .lightbox__palette {
+  inset: auto calc(var(--space-xs) * -1) calc(100% + var(--space-xs));
+}
+
+.lightbox--wide .lightbox__palette .art__palette {
+  flex-direction: row;
+  align-items: flex-end;
+  block-size: auto;
+}
+
+.lightbox--wide .lightbox__palette .art__palette > a {
+  inline-size: auto;
+  min-inline-size: 0.6rem;
+  block-size: 1.2rem;
+  min-block-size: 0;
+  transform-origin: bottom;
+}
+
+.lightbox--wide .lightbox__palette .art__palette > a.is-match {
+  inline-size: auto;
+  block-size: 2.2rem;
+}
+
+.lightbox--wide .lightbox__palette .art__square {
+  top: auto;
+  bottom: 0;
+  left: 50%;
+  inline-size: 100%;
+  min-inline-size: 0;
+  block-size: 100%;
+  min-block-size: 0;
+  translate: -50% 0;
+  transition:
+    block-size 0.34s cubic-bezier(0.3, 0.7, 0, 1),
+    min-inline-size 0.34s cubic-bezier(0.3, 0.7, 0, 1);
+}
+
+.lightbox--wide .lightbox__palette .art__palette > a:is(:hover, :focus-visible) .art__square {
+  inline-size: 100%;
+  min-inline-size: 4.5rem;
+  block-size: 4.5rem;
+  min-block-size: 0;
+}
+
+/* one swatch per color, as wide as its share, all the same height and top-aligned */
+.art__palette {
+  display: flex;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.art__palette > a {
+  position: relative;
+  flex-basis: 0;
+  min-inline-size: 0.6rem;
+  block-size: 1.2rem;
+  transform-origin: top;
+}
+
+/* the page's own color hangs lower */
+.art__palette > a.is-match {
+  block-size: 1.8rem;
+}
+
+.art__palette > a:is(:hover, :focus-visible) {
+  z-index: 1;
+  outline: none;
+}
+
+/* the swatch keeps its place; over it, a square in its color grows out of it
+   and its closest name slides in at the bottom */
+.art__square {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  inline-size: 100%;
+  min-inline-size: 0;
+  block-size: 100%;
+  overflow: hidden;
+  background: inherit;
+  translate: -50% 0;
+  pointer-events: none;
+  transition:
+    block-size 0.34s cubic-bezier(0.3, 0.7, 0, 1),
+    min-inline-size 0.34s cubic-bezier(0.3, 0.7, 0, 1);
+}
+
+.art__palette > a:is(:hover, :focus-visible) .art__square {
+  min-inline-size: 4.5rem;
+  block-size: 4.5rem;
+}
+
+.art__name {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 0.3rem 0.35rem;
+  font-size: 0.65rem;
+  line-height: 1.15;
+  color: var(--paper);
+  background: var(--ink);
+  translate: 0 101%;
+  transition: translate 0.22s ease-in;
+}
+
+.art__name > span {
+  display: block;
+  opacity: 0;
+  translate: 0 0.4rem;
+  transition:
+    opacity 0.15s,
+    translate 0.15s;
+}
+
+.art__palette > a:is(:hover, :focus-visible) .art__name {
+  translate: 0 0;
+  transition: translate 0.3s cubic-bezier(0.3, 0.7, 0, 1) 0.12s;
+}
+
+.art__palette > a:is(:hover, :focus-visible) .art__name > span {
+  opacity: 1;
+  translate: 0 0;
+  transition:
+    opacity 0.25s ease-out 0.24s,
+    translate 0.3s cubic-bezier(0.3, 0.7, 0, 1) 0.24s;
+}
+
+.lightbox__info {
+  position: relative;
+  inline-size: 0;
+  min-inline-size: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: var(--text-xs);
+  line-height: 1.35;
+  pointer-events: auto;
+}
+
+.lightbox__info a {
+  color: inherit;
+}
+
+.lightbox__title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  font-size: 1.1rem;
+  font-weight: var(--weight-label);
+  text-decoration: none;
+}
+
+.lightbox__source {
+  opacity: 0.7;
+}
+
+/* the palette's hexes to the clipboard, at the plaque's right */
+.lightbox__info:has(.lightbox__copy) {
+  padding-inline-end: 7.5rem;
+}
+
+.lightbox__copy {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.3em 0.85em;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  color: inherit;
+  background: none;
+  font: inherit;
+  font-weight: var(--weight-label);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.lightbox__copy:hover,
+.lightbox__copy:focus-visible {
+  outline: none;
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+@media (max-width: 700px) {
+  .lightbox--wide .lightbox__frame img {
+    max-inline-size: calc(100vw - 2 * var(--gutter) - 2 * var(--space-xs));
+  }
+  .lightbox__frame img {
+    max-inline-size: calc(100vw - 2 * var(--gutter) - 2.2rem - 2 * var(--space-xs));
+    max-block-size: min(56svh, 100svh - 16rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery .tile {
+    opacity: 1;
+    translate: none;
+  }
+  .tile__open img {
+    transition: none;
+  }
+}
+
+.colophon {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: var(--space-m) var(--space-l);
+  padding: var(--space-m) var(--gutter);
+  color: var(--fill-ink, #fff);
+  background: var(--fill, var(--ink));
+}
+
+.colophon__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-m);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  text-transform: uppercase;
+}
+
+.colophon a {
+  color: inherit;
+}
+
+.colophon__color {
+  margin: 0;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  font-feature-settings: "tnum" 1;
+}
+
+@media (max-width: 40rem) {
+  .colophon {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.color-hero {
+  min-height: 100svh;
+}
+
+.color-hero__close {
+  position: fixed;
+  z-index: 8;
+  top: calc(var(--space-xs) + (var(--bar-h) - 2.5rem) / 2);
+  right: var(--space-s);
+  display: grid;
+  place-items: center;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  color: var(--paper);
+  background: var(--ink);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px var(--paper);
+}
+
+.color-hero__close svg {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+
+.color-hero__close:hover,
+.color-hero__close:focus-visible {
+  color: var(--ink);
+  background: var(--paper);
+}
+
+@media (max-width: 40rem) {
+  .color-hero__close {
+    top: var(--space-2xs);
+    right: 1rem;
+  }
+}
+
+/* detail.js places it at center + x·32vw, y·30vh */
+.color-hero__card {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) translate(calc(var(--x, 0.5) * 32vw), calc(var(--y, 0) * 30vh))
+    rotate(var(--r, 6deg));
+}
+
+/* not before it's placed, where it came from or at random (detail.js) */
+@media (scripting: enabled) {
+  .color-hero:not(.adopt) .color-hero__card:not(.is-placed) {
+    visibility: hidden;
+  }
+}
+
+.color-hero__card .swatchcard {
+  --card-w: clamp(13rem, 21vw, 24rem);
+  inline-size: var(--card-w);
+  font-size: calc(var(--card-w) * 0.205);
+}
+
+/* keeps long names clear of the card's landing zone */
+.color-hero .hero__content {
+  max-width: 52vw;
+}
+
+.color-hero .hero__title {
+  text-wrap: balance;
+  overflow-wrap: normal;
+  hyphens: manual;
+}
+
+.color-hero__intro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+}
+
+.color-hero .lead {
+  max-width: 34ch;
+}
+
+/* tabular figures only where hex codes and numbers line up; in a name they'd widen the
+   hyphen of Red-Handed */
+.hero__stats,
+.wall__result-hex {
+  font-feature-settings: "tnum" 1;
+}
+
+.color-page .slide--dense {
+  min-height: auto;
+  padding-block: var(--space-l);
+}
+
+/* a section waiting for its content keeps about the room it will take, so nothing below jumps */
+.color-page .slide.is-filling {
+  min-height: 70svh;
+}
+
+.color-page .color-art.is-filling {
+  min-height: min(100svh, 56rem);
+}
+
+.color-page .color-fill {
+  --bg: var(--fill);
+  --fg: var(--fill-ink, #fff);
+  min-height: 90svh;
+  justify-content: center;
+}
+
+.color-fill__hex {
+  font-feature-settings: "tnum" 1;
+  overflow-wrap: anywhere;
+}
+
+.color-fill__ink {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+  margin-top: var(--space-l);
+}
+
+.color-fill__ink .lead {
+  max-width: 34ch;
+  font-weight: 400; /* hairline type fades on mid-tone colors */
+}
+
+.color-specs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: var(--space-s) var(--space-m);
+  margin: var(--space-l) 0 0;
+}
+
+.color-specs dd {
+  margin: var(--space-2xs) 0 0;
+  max-width: 30ch;
+}
+
+/* the drawing standing at the left of its title and text, one size whatever the text */
+.color-specs__pair {
+  position: relative;
+  padding-inline-start: 2.1em;
+}
+
+/* hovered or focused, each drawing in its real colors */
+.mix-viz [class^="mix-"] {
+  transition: fill 0.25s ease;
+}
+
+.color-specs__pair {
+  cursor: default;
+}
+
+.color-specs__pair:is(:hover, .is-lit) .mix-r {
+  fill: #ff2b2b;
+}
+
+.color-specs__pair:is(:hover, .is-lit) .mix-g {
+  fill: #19d14a;
+}
+
+.color-specs__pair:is(:hover, .is-lit) .mix-b {
+  fill: #2b5cff;
+}
+
+.color-specs__pair:is(:hover, .is-lit) .mix-c {
+  fill: #00b4ee;
+}
+
+.color-specs__pair:is(:hover, .is-lit) .mix-m {
+  fill: #ec008c;
+}
+
+.color-specs__pair:is(:hover, .is-lit) .mix-y {
+  fill: #ffe600;
+}
+
+.color-specs__pair:is(:hover, .is-lit) .mix-k {
+  fill: #111;
+}
+
+.color-specs__pair:is(:hover, .is-lit) .mix-heat {
+  fill: url(#mix-heat);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mix-viz [class^="mix-"] {
+    transition: none;
+  }
+}
+
+.mix-viz {
+  position: absolute;
+  inset-block-start: 0.15em;
+  inset-inline-start: 0;
+  block-size: 6.6em;
+  inline-size: auto;
+  overflow: visible;
+}
+
+.color-fill .color-specs--formats {
+  margin-inline-start: var(--lead-inset);
+}
+
+.color-specs--formats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-s) var(--space-l);
+}
+
+.color-specs--formats dd {
+  white-space: nowrap;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-display);
+  letter-spacing: -0.02em;
+  font-feature-settings: "tnum" 1;
+}
+
+.color-specs__copy {
+  padding: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: copy;
+}
+
+.color-specs__copy:hover {
+  text-decoration: underline;
+  text-decoration-thickness: var(--line);
+  text-underline-offset: 0.15em;
+}
+
+.color-about {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+  gap: var(--space-s) var(--space-m);
+  max-width: 72rem;
+  margin-bottom: var(--space-m);
+}
+
+.color-about:empty {
+  display: none;
+}
+
+[data-words-slide] .color-about {
+  margin-inline-start: var(--lead-inset);
+}
+
+.color-about p {
+  margin: 0;
+  max-width: 52ch;
+  font-size: calc(var(--text-base) * 1.12);
+  line-height: 1.5;
+}
+
+.color-words__title {
+  max-width: 18ch;
+}
+
+.color-specs--words {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  max-width: 72rem;
+}
+
+.color-page .slide--dense > .display {
+  margin-bottom: var(--space-m);
+}
+
+.color-dictionary:empty,
+.color-wiki:empty {
+  display: none;
+}
+
+.dictionary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: var(--space-l) var(--space-m);
+  max-width: 72rem;
+}
+
+.dictionary__entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.dictionary__senses {
+  counter-reset: sense;
+  margin: 0 0 var(--space-s);
+  padding: 0;
+  list-style: none;
+}
+
+.dictionary__senses li {
+  counter-increment: sense;
+  display: grid;
+  grid-template-columns: 1.6em 1fr;
+  gap: 0.4em;
+}
+
+.dictionary__senses li + li {
+  margin-top: 0.5em;
+}
+
+.dictionary__senses li > span {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+}
+
+.dictionary__senses li::before {
+  content: counter(sense);
+  font-weight: var(--weight-display);
+}
+
+.dictionary__source {
+  align-self: flex-start;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  text-transform: uppercase;
+}
+
+.dictionary--whole {
+  grid-template-columns: minmax(0, 52rem);
+}
+
+.color-meaning__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25em;
+}
+
+.color-meaning__title .play {
+  inline-size: 2.6rem;
+  block-size: 2.6rem;
+}
+
+.dictionary--whole .dictionary__senses {
+  font-size: var(--text-lg);
+  font-weight: 300;
+  line-height: 1.25;
+}
+
+.dictionary--whole .dictionary__senses li::before {
+  font-weight: var(--weight-display);
+}
+
+.play {
+  position: relative;
+  flex: none;
+  inline-size: 1.6rem;
+  block-size: 1.6rem;
+  padding: 0;
+  color: var(--fg);
+  background: transparent;
+  border: var(--line) solid currentColor;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.play::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  inline-size: 0;
+  block-size: 0;
+  border-block: 0.3rem solid transparent;
+  border-inline-start: 0.5rem solid currentColor;
+  transform: translateX(0.08rem);
+}
+
+.play--playing::before {
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border: 0;
+  background: currentColor;
+  transform: none;
+}
+
+.play:hover {
+  color: var(--bg);
+  background: var(--fg);
+}
+
+.color-wiki {
+  margin-top: var(--space-l);
+}
+
+.color-dictionary:empty + .color-wiki {
+  margin-top: 0;
+}
+
+.wiki-index {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-l);
+}
+
+.wiki-index__row {
+  --inset: 0px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+  inline-size: min(100% - var(--inset), 46rem);
+  margin-inline-start: var(--inset);
+}
+
+.wiki-index__row:nth-child(4n + 2) {
+  --inset: min(26vw, 24rem);
+}
+
+.wiki-index__row:nth-child(4n + 3) {
+  --inset: min(10vw, 9rem);
+}
+
+.wiki-index__row:nth-child(4n + 4) {
+  --inset: min(36vw, 32rem);
+}
+
+.wiki-index__row h3 {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-display);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.wiki-index__row h3 .play {
+  margin-left: 0.65em;
+  vertical-align: 0.1em;
+}
+
+.wiki-index__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-s);
+  align-items: start;
+}
+
+.wiki-index__body:has(.wiki-index__picture) {
+  grid-template-columns: minmax(6rem, 13rem) minmax(0, 1fr);
+}
+
+.wiki-index__row:nth-child(even) .wiki-index__body:has(.wiki-index__picture) {
+  grid-template-columns: minmax(0, 1fr) minmax(6rem, 13rem);
+}
+
+.wiki-index__row:nth-child(even) .wiki-index__picture {
+  order: 2;
+}
+
+.wiki-index__picture {
+  display: block;
+  box-sizing: border-box;
+  inline-size: 100%;
+  block-size: auto;
+  max-block-size: 16rem;
+  padding: 0.35rem;
+  object-fit: contain;
+  object-position: top;
+  background: var(--fg);
+}
+
+.wiki-index__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  max-width: 60ch;
+}
+
+/* clamped, not cut: the full text stays in the page for search */
+.wiki-index__text p,
+.wiki-index__row > p {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+}
+
+.wiki-index__text ul {
+  margin: 0;
+  padding-left: 1.1em;
+}
+
+.wiki-index__text > a {
+  align-self: flex-start;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  text-transform: uppercase;
+}
+
+.wiki-index__words {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  max-width: 60ch;
+  font-size: var(--text-xs);
+}
+
+.wiki-index__words + .wiki-index__body {
+  margin-block-start: var(--space-xs);
+  margin-inline-start: min(9vw, 8rem);
+}
+
+.wiki-index__words .dictionary__senses {
+  margin-bottom: var(--space-2xs);
+}
+
+@media (max-width: 640px) {
+  .wiki-index__row {
+    --inset: 0px !important;
+  }
+  .wiki-index__body:has(.wiki-index__picture),
+  .wiki-index__row:nth-child(even) .wiki-index__body:has(.wiki-index__picture) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .wiki-index__row:nth-child(even) .wiki-index__picture {
+    order: 0;
+  }
+  .wiki-index__picture {
+    inline-size: auto;
+    max-inline-size: 100%;
+    max-block-size: 12rem;
+  }
+  .wiki-index__words + .wiki-index__body {
+    margin-inline-start: var(--space-s);
+  }
+}
+
+.color-page {
+  position: relative;
+}
+
+.neighbors {
+  display: grid;
+  /* 12 cards: 6, 4, 3 or 2 to a row, so the last row is never ragged */
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--space-m) var(--space-s);
+}
+
+@media (max-width: 1100px) {
+  .neighbors {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .neighbors {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .neighbors {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.color-next {
+  margin-top: var(--space-l);
+}
+
+.neighbors--ramp {
+  grid-template-columns: repeat(11, 1fr);
+  gap: var(--space-xs);
+}
+
+@media (min-width: 1101px) {
+  .neighbors--ramp > .neighbor {
+    transform-origin: bottom;
+  }
+
+  .neighbors--ramp > .neighbor:first-child {
+    transform-origin: bottom left;
+  }
+
+  .neighbors--ramp > .neighbor:last-child {
+    transform-origin: bottom right;
+  }
+
+  .neighbors--ramp > .neighbor:hover,
+  .neighbors--ramp > .neighbor:focus-visible {
+    transform: scale(1.8) rotate(calc(var(--rnd, 0) * 6deg));
+  }
+}
+
+@media (max-width: 1100px) {
+  .neighbors--ramp {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 9rem;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scroll-snap-type: x mandatory;
+    margin-inline: calc(-1 * var(--gutter));
+    padding: 0.5rem var(--gutter) var(--space-xs);
+    scroll-padding-inline: var(--gutter);
+  }
+
+  .neighbors--ramp > .neighbor {
+    scroll-snap-align: start;
+  }
+}
+
+.neighbor {
+  container-type: inline-size;
+  position: relative;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  z-index: 1;
+  /* leaving hover: z-index 2 while it shrinks back (half of 0.8s), then 1 */
+  transition:
+    transform 0.4s cubic-bezier(0.3, 0.7, 0, 1),
+    z-index 0.8s steps(2, jump-start);
+}
+
+.neighbor .swatchcard {
+  inline-size: 100%;
+  font-size: 20.5cqi; /* the original's 0.205 of the card's width */
+}
+
+/* on white slides the white label would vanish */
+.slide:not(.slide--invert) .neighbor .swatchcard__info {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.neighbor:hover,
+.neighbor:focus-visible {
+  z-index: 3;
+  transition:
+    transform 0.4s cubic-bezier(0.3, 0.7, 0, 1),
+    z-index 0s;
+  transform: translateY(-0.4rem) rotate(calc(var(--rnd, 0) * 6deg));
+}
+
+.neighbor:focus-visible {
+  outline: var(--line) solid var(--fg);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .neighbor {
+    transition: none;
+  }
+}
+
+/* on a wide screen the adopt page's card stays in view while the text scrolls past */
+@media (min-width: 761px) and (orientation: landscape) {
+  .adopt .color-hero__card {
+    position: fixed;
+  }
+}
+
+@media (max-width: 760px), (orientation: portrait) {
+  /* card middle + half its tilted height, then a spacing step */
+  .color-hero {
+    justify-content: flex-end;
+    padding-top: calc(var(--space-l) + 30vw + min(52vw, 18rem) * 0.8 + var(--space-l));
+  }
+  .color-hero__card {
+    top: calc(var(--space-l) + 30vw);
+    transform: translate(-50%, -50%) translate(calc((var(--x, 0.5) - 0.5) * 30vw), 0) rotate(var(--r, 6deg));
+  }
+  .color-hero__card .swatchcard {
+    --card-w: min(52vw, 18rem);
+  }
+  .color-hero .hero__content {
+    max-width: none;
+  }
+}
+
+.swatchcard {
+  --anim-appear-duration: 1100ms;
+  --s-label-height: 1.46em;
+  position: relative;
+  inline-size: 16rem;
+  font-size: 3.28rem; /* the original's 4.1vw at 20vw wide */
+  overflow: hidden;
+}
+
+.swatchcard__upper {
+  position: relative;
+  padding-top: 100%;
+  overflow: hidden;
+}
+
+.swatchcard__swatch {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  overflow: hidden;
+  transform: translateY(150%);
+  transition: calc(var(--anim-appear-duration) * 0.666) transform cubic-bezier(0.8, 0.3, 0.25, 1.75);
+}
+
+.swatchcard__shade {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 100%;
+  transform: scaleY(0);
+  transition: calc(var(--anim-appear-duration) * 0.2) transform ease-in;
+}
+
+.swatchcard__shade:nth-child(1) {
+  background: var(--c-shade0);
+  transition-delay: calc(var(--anim-appear-duration) * 0.06);
+}
+
+.swatchcard__shade:nth-child(2) {
+  background: var(--c-shade1);
+  transition-delay: calc(var(--anim-appear-duration) * 0.03);
+}
+
+.swatchcard__shade:nth-child(3) {
+  background: var(--c-color);
+}
+
+.swatchcard__label {
+  position: relative;
+  z-index: 2;
+  height: var(--s-label-height);
+  margin-top: -1px;
+}
+
+.swatchcard__info {
+  position: absolute;
+  inset: -1px 0 0;
+  display: block;
+  width: 100%;
+  height: 0;
+  overflow: hidden;
+  padding: 0 0.3em;
+  color: var(--ink);
+  background: var(--paper);
+  transition: calc(var(--anim-appear-duration) * 0.2) height cubic-bezier(0.7, 0.3, 0, 1)
+    calc(var(--anim-appear-duration) * 0.15);
+}
+
+.swatchcard__row1,
+.swatchcard__row2 {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  opacity: 0;
+  transform: translateY(200%);
+  transition:
+    calc(var(--anim-appear-duration) * 0.1) opacity linear,
+    calc(var(--anim-appear-duration) * 0.2) transform cubic-bezier(0.7, 0.3, 0, 1);
+}
+
+.swatchcard__row1 {
+  height: 1.2em;
+  margin-top: 0.45em;
+  font-size: 0.55em;
+  font-weight: 700;
+  line-height: 1.2;
+  transition-delay: calc(var(--anim-appear-duration) * 0.05);
+}
+
+.swatchcard__row2 {
+  height: 1.2em;
+  margin-top: -0.05em;
+  font-size: 0.27em;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+/* a card's words in the optical size the space paints them at (labels-gl.js: the hex at
+   512 × 0.205 × 0.55 px, the name at × 0.27), so nothing shifts as one hands over to the
+   other; nor tabular figures, which a canvas can't set */
+.swatchcard__row1,
+.wall__label-hex {
+  font-variation-settings: "opsz" 32;
+}
+
+.swatchcard__row2,
+.wall__label-name {
+  font-variation-settings: "opsz" 28.34;
+}
+
+.swatchcard--visible .swatchcard__swatch {
+  transform: translateY(0);
+  transition: calc(var(--anim-appear-duration) * 0.566) transform cubic-bezier(0.8, 0.3, 0.25, 1)
+    var(--anim-appear-delay, 0ms);
+}
+
+.swatchcard--visible .swatchcard__shade {
+  transform: scaleY(1);
+  transition: calc(var(--anim-appear-duration) * 0.666) transform cubic-bezier(0.7, 0.3, 0, 1);
+}
+
+.swatchcard--visible .swatchcard__shade:nth-child(1) {
+  transition-delay: var(--anim-appear-delay, 0ms);
+}
+
+.swatchcard--visible .swatchcard__shade:nth-child(2) {
+  transition-delay: calc(var(--anim-appear-delay, 0ms) + var(--anim-appear-duration) * 0.1);
+}
+
+.swatchcard--visible .swatchcard__shade:nth-child(3) {
+  transition-delay: calc(var(--anim-appear-delay, 0ms) + var(--anim-appear-duration) * 0.2);
+}
+
+.swatchcard--visible .swatchcard__info {
+  height: var(--s-label-height);
+  transition: calc(var(--anim-appear-duration) * 0.6) height cubic-bezier(0.7, 0.3, 0, 1) var(--anim-appear-delay, 0ms);
+}
+
+.swatchcard--visible .swatchcard__row1,
+.swatchcard--visible .swatchcard__row2 {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    calc(var(--anim-appear-duration) * 0.05) opacity linear var(--anim-appear-delay, 0ms),
+    calc(var(--anim-appear-duration) * 0.7) transform cubic-bezier(0.8, 0.3, 0.25, 1) var(--anim-appear-delay, 0ms);
+}
+
+.swatchcard--visible .swatchcard__row2 {
+  transition-delay:
+    calc(var(--anim-appear-delay, 0ms) + var(--anim-appear-duration) * 0.15),
+    calc(var(--anim-appear-delay, 0ms) + var(--anim-appear-duration) * 0.15);
+}
+
+/* an adopted color, 10+: a holo card that follows the pointer, or sways on its own */
+/* every color's card leans towards the pointer, or with the phone */
+.swatchcard--tilt {
+  --rx: 0deg;
+  --ry: 0deg;
+  transform: perspective(70em) rotateX(var(--ry)) rotateY(var(--rx));
+  transition: transform 0.6s cubic-bezier(0.3, 0.7, 0, 1);
+  /* a finger tilts it sideways; up and down still scrolls */
+  touch-action: pan-y;
+}
+
+.swatchcard--tilt.is-tilting {
+  transition: transform 0.12s ease-out;
+}
+
+.swatchcard--holo {
+  --mx: 50%;
+  --my: 50%;
+  --shine: 0.55;
+  --stars: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='1' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 22 -18.5'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23s)'/%3E%3C/svg%3E");
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+  z-index: 1;
+  box-shadow: 0 1.4rem 3rem -1rem rgb(0 0 0 / 0.45);
+}
+
+.holo-sparks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.holo-spark {
+  position: absolute;
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+}
+
+.swatchcard--holo::before,
+.swatchcard--holo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* bands of light at an angle, a second set across them, and grain */
+.swatchcard--holo::before,
+.holo-parrot {
+  background-image:
+    var(--grain),
+    repeating-linear-gradient(
+      -24deg,
+      hsl(2 100% 73%) 0%,
+      hsl(52 100% 69%) 5%,
+      hsl(98 100% 70%) 10%,
+      hsl(176 100% 72%) 15%,
+      hsl(228 100% 74%) 20%,
+      hsl(286 100% 73%) 25%,
+      hsl(2 100% 73%) 30%
+    ),
+    repeating-linear-gradient(
+      128deg,
+      hsl(228 50% 12%) 0%,
+      hsl(190 22% 62%) 3.5%,
+      hsl(185 32% 70%) 4.4%,
+      hsl(190 22% 62%) 5.4%,
+      hsl(228 50% 12%) 9.5%,
+      hsl(228 50% 12%) 12%
+    );
+  background-blend-mode: screen, hue, hard-light;
+  background-size:
+    18em,
+    200% 640%,
+    320% 320%;
+  background-position:
+    center,
+    0% var(--fy),
+    var(--fx) var(--fy);
+  filter: brightness(0.85) contrast(2.6) saturate(0.6);
+  mix-blend-mode: color-dodge;
+  opacity: 0;
+}
+
+.swatchcard--holo {
+  --fx: var(--mx);
+  --fy: var(--my);
+}
+
+/* four more kinds of foil, all built like the prism: mostly dark, so the
+   color stays itself, with narrow streaks where the light catches */
+/* the classic holo: hue-stepped bars, a rainbow racing across them,
+   wide glints at two speeds and a round glare */
+.swatchcard--holo[data-shine="classic"]::before,
+.swatchcard--holo[data-shine="classic"] .holo-parrot {
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      hsl(0 70% 50%) 0px 2px,
+      #000 2px 4px,
+      hsl(21 70% 50%) 4px 6px,
+      #000 6px 8px,
+      hsl(42 70% 50%) 8px 10px,
+      #000 10px 12px,
+      hsl(63 70% 50%) 12px 14px,
+      #000 14px 16px,
+      hsl(84 70% 50%) 16px 18px,
+      #000 18px 20px,
+      hsl(105 70% 50%) 20px 22px,
+      #000 22px 24px,
+      hsl(126 70% 50%) 24px 26px,
+      #000 26px 28px,
+      hsl(147 70% 50%) 28px 30px,
+      #000 30px 32px,
+      hsl(168 70% 50%) 32px 34px,
+      #000 34px 36px,
+      hsl(189 70% 50%) 36px 38px,
+      #000 38px 40px,
+      hsl(210 70% 50%) 40px 42px,
+      #000 42px 44px,
+      hsl(231 70% 50%) 44px 46px,
+      #000 46px 48px,
+      hsl(252 70% 50%) 48px 50px,
+      #000 50px 52px,
+      hsl(273 70% 50%) 52px 54px,
+      #000 54px 56px,
+      hsl(294 70% 50%) 56px 58px,
+      #000 58px 60px,
+      hsl(315 70% 50%) 60px 62px,
+      #000 62px 64px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      hsl(286 85% 56%),
+      hsl(193 90% 48%),
+      hsl(150 80% 52%),
+      hsl(57 88% 50%),
+      hsl(332 94% 51%),
+      hsl(286 85% 56%)
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgb(10 10 10) 0 48px,
+      rgb(255 255 255 / 0.6) 72px,
+      rgb(10 10 10) 84px,
+      rgb(255 255 255 / 0.6) 96px,
+      rgb(10 10 10) 120px,
+      rgb(10 10 10) 288px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgb(10 10 10) 0 48px,
+      rgb(255 255 255 / 0.6) 72px,
+      rgb(10 10 10) 84px,
+      rgb(255 255 255 / 0.6) 96px,
+      rgb(10 10 10) 120px,
+      rgb(10 10 10) 216px
+    ),
+    radial-gradient(
+      farthest-corner circle at var(--mx) var(--my),
+      rgb(230 230 230 / 0.85) 0%,
+      rgb(200 200 200 / 0.1) 25%,
+      rgb(0 0 0) 90%
+    );
+  background-blend-mode: soft-light, soft-light, screen, overlay;
+  background-size:
+    100% 100%,
+    200% 200%,
+    237% 237%,
+    195% 195%,
+    120% 120%;
+  background-position:
+    center,
+    calc((50% - var(--fx)) * 25 + 50%) center,
+    calc(var(--fx) * -1.2) var(--fy),
+    var(--fx) var(--fy),
+    center;
+  filter: brightness(calc((var(--tilt, 0) + 0.7) * 0.7)) contrast(3.2) saturate(0.66);
+}
+
+.swatchcard--holo[data-shine="galaxy"]::before,
+.swatchcard--holo[data-shine="galaxy"] .holo-parrot {
+  background-image:
+    var(--stars),
+    repeating-linear-gradient(
+      -24deg,
+      hsl(250 90% 70%) 0%,
+      hsl(285 90% 72%) 8%,
+      hsl(320 90% 72%) 16%,
+      hsl(200 90% 66%) 24%,
+      hsl(250 90% 70%) 32%
+    ),
+    repeating-linear-gradient(
+      128deg,
+      hsl(240 55% 8%) 0%,
+      hsl(260 30% 56%) 3.5%,
+      hsl(270 40% 70%) 4.4%,
+      hsl(260 30% 56%) 5.4%,
+      hsl(240 55% 8%) 9.5%,
+      hsl(240 55% 8%) 12%
+    );
+  background-size:
+    11em,
+    200% 640%,
+    320% 320%;
+}
+
+/* radiant: crossed bars of grey that cut the light into a sparkle, over a pastel rainbow */
+/* each layer's tile big enough that, however far the card turns, it never shows its edge:
+   positions stay within 0–100%, sizes and stops scaled so the light moves and looks as before */
+.swatchcard--holo[data-shine="radiant"]::before,
+.swatchcard--holo[data-shine="radiant"] .holo-parrot {
+  --bar: calc(0.9% * 2.1 / 2.65);
+  --hue: calc(4 / 8.5);
+  background-image:
+    repeating-linear-gradient(
+      55deg,
+      hsl(2 100% 81%) 0%,
+      hsl(207 100% 67%) calc(9% * var(--hue)),
+      hsl(30 100% 79%) calc(18% * var(--hue)),
+      hsl(160 100% 75%) calc(27% * var(--hue)),
+      hsl(310 95% 83%) calc(36% * var(--hue)),
+      hsl(190 100% 79%) calc(45% * var(--hue)),
+      hsl(2 100% 81%) calc(54% * var(--hue))
+    ),
+    repeating-linear-gradient(
+      45deg,
+      hsl(0 0% 8%) calc(var(--bar) * 0) calc(var(--bar) * 1),
+      hsl(0 0% 12%) calc(var(--bar) * 1) calc(var(--bar) * 2),
+      hsl(0 0% 30%) calc(var(--bar) * 2) calc(var(--bar) * 3),
+      hsl(0 0% 52%) calc(var(--bar) * 3) calc(var(--bar) * 4),
+      hsl(0 0% 68%) calc(var(--bar) * 4) calc(var(--bar) * 5),
+      hsl(0 0% 52%) calc(var(--bar) * 5) calc(var(--bar) * 6),
+      hsl(0 0% 30%) calc(var(--bar) * 6) calc(var(--bar) * 7),
+      hsl(0 0% 12%) calc(var(--bar) * 7) calc(var(--bar) * 8),
+      hsl(0 0% 8%) calc(var(--bar) * 8) calc(var(--bar) * 9),
+      hsl(0 0% 6%) calc(var(--bar) * 9) calc(var(--bar) * 10)
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      hsl(0 0% 8%) calc(var(--bar) * 0) calc(var(--bar) * 1),
+      hsl(0 0% 12%) calc(var(--bar) * 1) calc(var(--bar) * 2),
+      hsl(0 0% 30%) calc(var(--bar) * 2) calc(var(--bar) * 3),
+      hsl(0 0% 52%) calc(var(--bar) * 3) calc(var(--bar) * 4),
+      hsl(0 0% 68%) calc(var(--bar) * 4) calc(var(--bar) * 5),
+      hsl(0 0% 52%) calc(var(--bar) * 5) calc(var(--bar) * 6),
+      hsl(0 0% 30%) calc(var(--bar) * 6) calc(var(--bar) * 7),
+      hsl(0 0% 12%) calc(var(--bar) * 7) calc(var(--bar) * 8),
+      hsl(0 0% 8%) calc(var(--bar) * 8) calc(var(--bar) * 9),
+      hsl(0 0% 6%) calc(var(--bar) * 9) calc(var(--bar) * 10)
+    );
+  background-blend-mode: color, darken;
+  background-size:
+    850% 850%,
+    265% 265%,
+    265% 265%;
+  background-position:
+    calc(100% - var(--fx)) calc(100% - var(--fy)),
+    var(--fx) var(--fy),
+    var(--fx) var(--fy);
+  filter: brightness(0.85) contrast(2.4) saturate(1.3);
+}
+
+/* faint face on, it sparkles as the card turns */
+.swatchcard--holo[data-shine="radiant"].swatchcard--visible::before,
+.swatchcard--holo[data-shine="radiant"][data-tone].swatchcard--visible::before {
+  opacity: var(--shine);
+}
+
+/* nova: fine rainbow rays fanning out from where the light falls, clear at its very center
+   and fading away from it, the rainbow turning with the card */
+.swatchcard--holo[data-shine="nova"]::before,
+.swatchcard--holo[data-shine="nova"] .holo-parrot {
+  background-image:
+    radial-gradient(circle at var(--fx) var(--fy), #000 0%, #000 4%, #fff 24%, #b0b0b0 42%, #000 88%),
+    repeating-conic-gradient(
+      from 0deg at var(--fx) var(--fy),
+      hsl(0 0% 8%) 0deg 2.4deg,
+      hsl(0 0% 40%) 3deg,
+      hsl(0 0% 78%) 3.5deg,
+      hsl(0 0% 40%) 4deg,
+      hsl(0 0% 8%) 4.6deg 6deg
+    ),
+    conic-gradient(
+      from calc(var(--rx, 0deg) * 6 + var(--ry, 0deg) * 4) at var(--fx) var(--fy),
+      hsl(2 100% 73%),
+      hsl(52 100% 69%),
+      hsl(140 100% 70%),
+      hsl(200 100% 72%),
+      hsl(262 100% 76%),
+      hsl(320 100% 74%),
+      hsl(2 100% 73%)
+    );
+  background-blend-mode: multiply, hard-light;
+  background-size: 100% 100%;
+  filter: brightness(1) contrast(2.1) saturate(1.2);
+}
+
+/* barely a rainbow: a fine printed texture, a faint pastel wash and a strong shine */
+.swatchcard--holo[data-shine="aurora"]::before,
+.swatchcard--holo[data-shine="aurora"] .holo-parrot {
+  background-image:
+    repeating-linear-gradient(35deg, rgb(255 255 255 / 0.16) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(-55deg, rgb(255 255 255 / 0.1) 0 1px, transparent 1px 3px), var(--grain),
+    repeating-linear-gradient(
+      -20deg,
+      hsl(282 50% 61% / 0.75) 0%,
+      hsl(2 70% 59% / 0.75) 4.5%,
+      hsl(52 70% 54% / 0.75) 9%,
+      hsl(95 55% 52% / 0.75) 13.5%,
+      hsl(176 45% 50% / 0.75) 18%,
+      hsl(228 100% 76% / 0.75) 22.5%,
+      hsl(282 50% 61% / 0.75) 27%
+    );
+  background-blend-mode: normal, normal, soft-light;
+  background-size:
+    auto,
+    auto,
+    18em,
+    210% 420%;
+  background-position:
+    0 0,
+    0 0,
+    center,
+    0% var(--fy);
+  filter: brightness(0.6) contrast(1.8) saturate(1);
+}
+
+/* gold, after the secret rares: golden light in bands over brushed metal, brighter as the card
+   turns. The metal is drawn here, stretched noise, not loaded */
+.swatchcard--holo[data-shine="gold"]::before,
+.swatchcard--holo[data-shine="gold"] .holo-parrot {
+  background-image:
+    repeating-linear-gradient(
+      110deg,
+      rgb(89 46 80 / 0.5) 0%,
+      hsl(39 37% 60%) 2.5%,
+      rgb(216 183 92) 5%,
+      hsl(39 37% 60%) 7.5%,
+      rgb(14 21 46 / 0.5) 10%,
+      rgb(14 21 46 / 0.5) 15%
+    ),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.004 .9' numOctaves='3' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='1.6' intercept='-.15'/%3E%3CfeFuncG type='linear' slope='1.6' intercept='-.15'/%3E%3CfeFuncB type='linear' slope='1.6' intercept='-.15'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23m)'/%3E%3C/svg%3E");
+  background-blend-mode: darken;
+  background-size:
+    600% 600%,
+    9em;
+  background-position:
+    var(--fx) var(--fy),
+    center;
+  filter: brightness(calc(var(--tilt, 0) * 0.4 + 0.7)) contrast(2.6) saturate(0.66);
+}
+
+/* a tick quieter than the others: gold is loud by nature */
+.swatchcard--holo[data-shine="gold"].swatchcard--visible::before {
+  opacity: calc(var(--shine) * 0.72);
+}
+
+/* glitter, after the rainbow secret rares: a rainbow and bands of pastel crossing it, over
+   glitter of every color, fine and coarse. The glitter is drawn here, noise thresholded per
+   channel, not loaded */
+.swatchcard--holo[data-shine="glitter"]::before,
+.swatchcard--holo[data-shine="glitter"] .holo-parrot {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='1' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='9 0 0 0 -5.75 0 9 0 0 -5.75 0 0 9 0 -5.75 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23g)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='340' height='340'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.42' numOctaves='1' seed='23' stitchTiles='stitch'/%3E%3CfeColorMatrix values='9 0 0 0 -7 0 9 0 0 -7 0 0 9 0 -7 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='340' height='340' filter='url(%23g)'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(
+      -20deg,
+      rgb(253 71 65) 7%,
+      rgb(255 243 151) 14%,
+      rgb(168 255 95) 21%,
+      rgb(131 255 247) 28%,
+      rgb(75 198 255) 35%,
+      rgb(255 73 246) 42%,
+      rgb(255 56 49) 49%
+    ),
+    repeating-linear-gradient(
+      130deg,
+      rgb(89 46 80 / 0.5) 0%,
+      hsl(118 43% 76%) 2.5%,
+      rgb(223 96 202) 5%,
+      hsl(180 57% 56%) 7.5%,
+      rgb(14 21 46 / 0.5) 10%,
+      rgb(14 21 46 / 0.5) 15%
+    );
+  background-blend-mode: lighten, color-burn, soft-light;
+  background-size:
+    8em,
+    13em,
+    500% 500%,
+    1000% 1000%;
+  background-position:
+    center,
+    center,
+    0% var(--fy),
+    var(--fx) var(--fy);
+  filter: brightness(calc(var(--tilt, 0) * 0.25 + 0.66)) contrast(2) saturate(0.95);
+}
+
+.swatchcard--holo[data-shine="aurora"].swatchcard--visible::before {
+  opacity: calc(var(--shine) * 0.4);
+}
+
+.swatchcard--holo[data-shine="aurora"].swatchcard--visible::after {
+  opacity: calc(var(--shine) * 1.4);
+}
+
+/* dodging white or black changes nothing: on the lightest colors the foil
+   prints its streaks in, on the darkest it shines them on */
+.swatchcard--holo[data-tone="light"]:not([data-shine="aurora"])::before,
+.swatchcard--holo[data-tone="light"]:not([data-shine="aurora"]) .holo-parrot {
+  filter: invert(1) hue-rotate(180deg) brightness(1.08) contrast(1.5) saturate(1.1);
+  mix-blend-mode: multiply;
+}
+
+.swatchcard--holo[data-tone="dark"]::before,
+.swatchcard--holo[data-tone="dark"] .holo-parrot {
+  mix-blend-mode: screen;
+}
+
+.swatchcard--holo[data-tone="light"]:not([data-shine="aurora"]).swatchcard--visible::before {
+  opacity: calc(var(--shine) * 0.55);
+}
+
+.swatchcard--holo[data-tone="dark"]:not([data-shine="aurora"]).swatchcard--visible::before {
+  opacity: calc(var(--shine) * 0.7);
+}
+
+/* where the light catches */
+.swatchcard--holo::after {
+  background: radial-gradient(
+    farthest-corner circle at var(--mx) var(--my),
+    rgb(255 255 255 / 0.55) 0%,
+    rgb(255 255 255 / 0.12) 28%,
+    rgb(0 0 0 / 0.28) 90%
+  );
+  mix-blend-mode: overlay;
+  opacity: 0;
+}
+
+/* the parrot stamped in the same foil, its bands running the other way:
+   faint face on, bright when tilted */
+.holo-parrot {
+  position: absolute;
+  z-index: 2;
+  bottom: 0.3em;
+  left: 0.3em;
+  inline-size: 14%;
+  aspect-ratio: 130 / 158;
+  pointer-events: none;
+  --fx: calc(100% - var(--mx));
+  --fy: calc(100% - var(--my));
+  mask: var(--parrot) 0 0 / 100% 100% no-repeat;
+}
+
+/* the foil comes in last, once the card has built up, then follows the light */
+.swatchcard--holo.swatchcard--visible::before,
+.swatchcard--holo.swatchcard--visible::after {
+  opacity: var(--shine);
+  animation: holo-in 0.7s ease calc(var(--anim-appear-duration) * 0.85) backwards;
+}
+
+.swatchcard--holo.swatchcard--visible .holo-parrot {
+  opacity: calc(var(--shine) * (0.18 + var(--tilt, 0) * 1.1));
+  animation: holo-in 0.7s ease calc(var(--anim-appear-duration) * 0.95) backwards;
+}
+
+@keyframes holo-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swatchcard--tilt {
+    transform: none;
+  }
+}
+
+.swatchcard--reset,
+.swatchcard--reset * {
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swatchcard * {
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+  }
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m);
+}
+
+html:has(.wall-page) {
+  background: var(--ink);
+}
+
+/* behind the sections, as the hero: browsers tint their bar with it (Safari) */
+body:has(> .color-page) {
+  background: var(--ink);
+}
+
+/* no scrollbar while arriving: it would narrow the page and shift the card */
+html.is-arriving:not(.is-passed-on) {
+  overflow: hidden;
+}
+
+.wall-page {
+  --fg: var(--paper);
+  --bg: var(--ink);
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* the white search and its results read ink on paper again, their selection with them */
+.wall__search,
+.wall__results {
+  --fg: var(--ink);
+  --bg: var(--paper);
+}
+
+.wall {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.wall__canvas {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  touch-action: none;
+  cursor: grab;
+}
+
+.wall.is-dragging .wall__canvas {
+  cursor: grabbing;
+}
+
+.wall__labels,
+.wall__mark,
+.wall__tip {
+  position: absolute;
+  inset: 0 auto auto 0;
+  pointer-events: none;
+}
+
+.wall__labels {
+  z-index: 1;
+  isolation: isolate;
+}
+
+.wall__label {
+  position: absolute;
+  inset: 0 auto auto 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0 0.3em;
+  color: var(--ink);
+  will-change: transform;
+}
+
+/* keep in step with .swatchcard__row1 / __row2 */
+.wall__label-hex,
+.wall__label-name {
+  display: block;
+  height: 1.2em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.wall__label-hex {
+  margin-top: 0.45em;
+  font-size: 0.55em;
+  font-weight: 700;
+}
+
+.wall__label-name {
+  margin-top: -0.05em;
+  font-size: 0.27em;
+  font-weight: 300;
+}
+
+/* the edge keeps a white dot visible */
+.wall__tip-dot {
+  flex: none;
+  inline-size: 0.8rem;
+  block-size: 0.8rem;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+
+.wall__label[hidden],
+.wall__mark[hidden],
+.wall__tip[hidden] {
+  display: none;
+}
+
+.wall__mark {
+  outline: 3px solid var(--paper);
+  outline-offset: 5px;
+}
+
+.wall__tip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 1.1rem 0 0 0.9rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.3rem;
+  color: var(--ink);
+  background: var(--paper);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  font-feature-settings: normal;
+  white-space: nowrap;
+}
+
+.wall__intro,
+.wall__dock,
+.wall__zoom {
+  z-index: 2;
+}
+
+/* above the model picker, so search results open over it */
+.wall__bar {
+  z-index: 3;
+}
+
+.wall__bar {
+  position: absolute;
+  inset: 0 0 auto;
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 26rem) 1fr;
+  align-items: center;
+  gap: var(--space-s);
+  padding: var(--space-xs) var(--space-s);
+  pointer-events: none;
+}
+
+.wall__bar > * {
+  pointer-events: auto;
+}
+
+.wall__nav a {
+  display: inline-block;
+  padding: 0 1.1rem;
+  line-height: 2.5rem;
+  border-radius: 999px;
+  color: var(--paper);
+  background: var(--ink);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  text-decoration: none;
+}
+
+.wall__burger {
+  display: none;
+}
+
+.wall__nav {
+  display: flex;
+  grid-column: 3;
+  justify-self: end;
+}
+
+/* GitHub and, past a faint line in the same chip, the ? that opens the intro under it */
+.wall__nav a {
+  padding-inline-end: 0.75rem;
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+
+.wall__help {
+  position: relative;
+  inline-size: 2.4rem;
+  block-size: 2.5rem;
+  padding: 0 0.2rem 0 0;
+  border: 0;
+  border-radius: 0 999px 999px 0;
+  color: var(--paper);
+  background: var(--ink);
+  font: inherit;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.wall__help::before {
+  content: "";
+  position: absolute;
+  inset: 30% auto 30% 0;
+  inline-size: 1px;
+  background: rgb(255 255 255 / 0.25);
+}
+
+.wall__help:hover,
+.wall__help:focus-visible,
+.wall__help[aria-expanded="true"] {
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.wall__nav a {
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.wall__nav a:hover,
+.wall__nav a:focus-visible {
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.wall__find {
+  position: relative;
+  isolation: isolate;
+  grid-column: 2;
+}
+
+.brand {
+  --brand-h: 2.5rem;
+  position: fixed;
+  z-index: 8;
+  top: calc(var(--space-xs) + (var(--bar-h) - var(--brand-h)) / 2);
+  left: var(--space-s);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  block-size: var(--brand-h);
+  padding: 0 0.85rem 0 0.6rem;
+  border-radius: 999px;
+  color: var(--paper);
+  background: var(--ink);
+  font-family: var(--font);
+  font-size: var(--text-base);
+  font-weight: var(--weight-display);
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  text-decoration: none;
+}
+
+/* lifted a hair: the heavy head makes true center read low */
+.brand__logo {
+  block-size: 1.45rem;
+  inline-size: auto;
+  aspect-ratio: 130 / 158;
+  overflow: visible;
+  translate: 0 -0.08rem;
+}
+
+/* origins in the SVG's own units: head top for crest, mouth corner for beak */
+.brand__crest,
+.brand__beak {
+  transform-box: view-box;
+  transition: transform 0.5s cubic-bezier(0.34, 1.8, 0.5, 1);
+}
+
+.brand__crest {
+  transform-origin: 108px 104px;
+}
+
+.brand__crest--2 {
+  transition-delay: 0.03s;
+}
+
+.brand__crest--3 {
+  transition-delay: 0.06s;
+}
+
+.brand__crest--4 {
+  transition-delay: 0.09s;
+}
+
+.brand__beak {
+  transform-origin: 112px 128px;
+}
+
+.brand:hover .brand__crest--1,
+.brand:focus-visible .brand__crest--1 {
+  transform: rotate(-22deg);
+}
+
+.brand:hover .brand__crest--2,
+.brand:focus-visible .brand__crest--2 {
+  transform: rotate(-14deg);
+}
+
+.brand:hover .brand__crest--3,
+.brand:focus-visible .brand__crest--3 {
+  transform: rotate(-6deg);
+}
+
+.brand:hover .brand__crest--4,
+.brand:focus-visible .brand__crest--4 {
+  transform: rotate(9deg);
+}
+
+.brand:hover .brand__beak--top,
+.brand:focus-visible .brand__beak--top {
+  transform: rotate(-16deg);
+}
+
+.brand:hover .brand__beak--bottom,
+.brand:focus-visible .brand__beak--bottom {
+  transform: rotate(24deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand__crest,
+  .brand__beak {
+    transition: none;
+  }
+}
+
+.brand:focus-visible {
+  outline: 3px solid var(--paper);
+  outline-offset: 2px;
+}
+
+/* clip, unlike hidden, lets the pile hang into the next slide */
+.color-page {
+  overflow-x: clip;
+}
+
+.wall__page {
+  overflow-x: hidden;
+}
+
+.color-root,
+.wall__page {
+  scrollbar-color: var(--page-color, var(--fg)) transparent;
+}
+
+.wall__page .color-hero__home {
+  display: none;
+}
+
+.wall__picker {
+  position: absolute;
+  inset: 50% auto auto calc((var(--bar-h) - 1.7rem) / 2);
+  z-index: 1;
+  inline-size: 1.7rem;
+  block-size: 1.7rem;
+  border-radius: 50%;
+  overflow: hidden;
+  translate: 0 -50%;
+  cursor: pointer;
+  /* even steps of hue at one lightness and chroma, so no slice looks brighter than the next */
+  --l: 70%;
+  --c: 0.3;
+  background: conic-gradient(
+    oklch(var(--l) var(--c) 0) 0deg 30deg,
+    oklch(var(--l) var(--c) 30) 30deg 60deg,
+    oklch(var(--l) var(--c) 60) 60deg 90deg,
+    oklch(var(--l) var(--c) 90) 90deg 120deg,
+    oklch(var(--l) var(--c) 120) 120deg 150deg,
+    oklch(var(--l) var(--c) 150) 150deg 180deg,
+    oklch(var(--l) var(--c) 180) 180deg 210deg,
+    oklch(var(--l) var(--c) 210) 210deg 240deg,
+    oklch(var(--l) var(--c) 240) 240deg 270deg,
+    oklch(var(--l) var(--c) 270) 270deg 300deg,
+    oklch(var(--l) var(--c) 300) 300deg 330deg,
+    oklch(var(--l) var(--c) 330) 330deg 360deg
+  );
+}
+
+.wall__picker {
+  box-shadow: inset 0 0 0 2px #000;
+  animation: wheel 20s linear infinite;
+}
+
+@keyframes wheel {
+  to {
+    rotate: 1turn;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wall__picker {
+    animation: none;
+  }
+}
+
+.wall__picker input {
+  position: absolute;
+  inset: -0.5rem;
+  inline-size: calc(100% + 1rem);
+  block-size: calc(100% + 1rem);
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.wall__picker:focus-within {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.wall__search {
+  block-size: var(--bar-h);
+  inline-size: 100%;
+  padding: 0.7rem 2.9rem 0.7rem 2.95rem;
+  border: 0;
+  border-radius: 999px;
+  color: var(--ink);
+  background: var(--paper);
+  font: inherit;
+  font-size: var(--text-base);
+}
+
+/* hides the native blue clear button; Escape clears */
+.wall__search::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* a dice while there's nothing to clear, an × once there is: the face undraws, the arms grow
+   out of the middle pip, and each corner pip is gone as an arm reaches it; back, the other way */
+.wall__clear {
+  position: absolute;
+  inset: 50% 0.55rem auto auto;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  inline-size: 1.9rem;
+  block-size: 1.9rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--ink);
+  background: none;
+  translate: 0 -50%;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.wall__clear svg {
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+  overflow: visible;
+}
+
+.wall__face,
+.wall__arm {
+  fill: none;
+  stroke: currentColor;
+  stroke-dasharray: 1 2;
+}
+
+.wall__face {
+  stroke-width: 1.8;
+  transition: stroke-dashoffset 0.35s 0.1s ease;
+}
+
+.wall__arm {
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  transition:
+    stroke-dashoffset 0.25s ease-in,
+    opacity 0s 0.25s;
+}
+
+.wall__pip {
+  fill: currentColor;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: scale 0.2s 0.2s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.wall__pip--middle {
+  transition-delay: 0.3s;
+}
+
+/* and gone once undrawn, its last speck too */
+.wall__clear.is-clear .wall__face {
+  stroke-dashoffset: -1;
+  opacity: 0;
+  transition:
+    stroke-dashoffset 0.35s ease,
+    opacity 0s 0.35s;
+}
+
+.wall__clear.is-clear .wall__arm {
+  stroke-dashoffset: 0;
+  opacity: 1;
+  transition:
+    stroke-dashoffset 0.3s 0.08s cubic-bezier(0.3, 0.7, 0, 1),
+    opacity 0s 0.08s;
+}
+
+.wall__clear.is-clear .wall__pip {
+  scale: 0;
+  transition: scale 0.12s 0.18s ease-in;
+}
+
+.wall__clear.is-clear .wall__pip--middle {
+  transition-delay: 0s;
+}
+
+/* rolled: it tumbles as it turns into the × */
+.wall__clear.is-rolling svg {
+  animation: dice-roll 0.6s cubic-bezier(0.3, 0.7, 0, 1);
+}
+
+@keyframes dice-roll {
+  from {
+    rotate: -360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wall__clear *,
+  .wall__clear.is-clear * {
+    transition: none;
+  }
+
+  .wall__clear.is-rolling svg {
+    animation: none;
+  }
+}
+
+.wall__clear:hover,
+.wall__clear:focus-visible {
+  outline: none;
+  color: var(--paper);
+  background: var(--ink);
+}
+
+/* the placeholder, centered: gone once the search is focused or holds anything */
+.wall__hint {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding-inline: 2.95rem;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: var(--text-base);
+  white-space: nowrap;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.wall__search:focus ~ .wall__hint,
+.wall__search:not(:placeholder-shown) ~ .wall__hint {
+  opacity: 0;
+}
+
+/* until it's first used, a band of the picker's colors runs through the words now and then */
+.wall__hint.is-new {
+  background: linear-gradient(
+      100deg,
+      var(--ink) 0 42%,
+      #f2385a 45%,
+      #fdbd2b 47.5%,
+      #2fc46b 50%,
+      #2b8cf2 52.5%,
+      #9b4dff 55%,
+      var(--ink) 58% 100%
+    )
+    0 0 / 300% 100% no-repeat;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: hint-sheen 4.5s ease-in-out 1s infinite;
+}
+
+@keyframes hint-sheen {
+  0% {
+    background-position: 100% 0;
+  }
+  45%,
+  100% {
+    background-position: 0% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wall__hint.is-new {
+    animation: none;
+    background: none;
+    color: var(--ink);
+  }
+}
+
+/* focused, the search gets the same frosted ring as the controls */
+.wall__find::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -0.3rem;
+  border-radius: 999px;
+  backdrop-filter: blur(16px) saturate(1.4);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.wall__find:has(.wall__search:focus-visible)::before {
+  opacity: 1;
+}
+
+.wall__search:focus-visible {
+  outline: none;
+}
+
+.wall__results {
+  position: absolute;
+  inset: calc(100% + 0.5rem) 0 auto;
+  margin: 0;
+  padding: 0.4rem;
+  list-style: none;
+  border-radius: 1rem;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.wall__result {
+  display: grid;
+  grid-template-columns: 1.6rem 1fr auto;
+  align-items: center;
+  gap: var(--space-2xs);
+  inline-size: 100%;
+  padding: 0.45rem 0.6rem;
+  border: 0;
+  border-radius: 0.6rem;
+  color: inherit;
+  background: none;
+  font: inherit;
+  font-size: var(--text-xs);
+  text-align: start;
+  cursor: pointer;
+}
+
+.wall__result[aria-selected="true"],
+.wall__result:hover {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.wall__result-swatch {
+  aspect-ratio: 1;
+  border-radius: 0.3rem;
+}
+
+.wall__result-name {
+  overflow: hidden;
+  font-weight: var(--weight-label);
+  font-feature-settings: normal;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.wall__corner {
+  position: absolute;
+  inset: auto auto var(--space-s) var(--space-s);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2xs);
+  max-inline-size: 22rem;
+  pointer-events: none;
+}
+
+.wall__corner > * {
+  pointer-events: auto;
+}
+
+.wall__status {
+  margin: 0;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  color: var(--ink);
+  background: var(--paper);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  font-variant-numeric: tabular-nums;
+}
+
+.wall__intro[hidden] {
+  display: none;
+}
+
+@keyframes wall-intro-in {
+  from {
+    opacity: 0;
+    translate: var(--intro-from);
+  }
+}
+
+/* over the chip with its ?, top right, its buttons to the right; on a phone, where that chip
+   isn't, bottom left over the dock. It comes from where it sits and goes back there */
+.wall__intro {
+  --intro-from: 0 -0.8rem;
+  position: absolute;
+  inset: var(--space-xs) var(--space-s) auto auto;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  /* clear of the search in the middle (at most 26rem wide), with a margin's gap to it */
+  inline-size: min(22rem, calc(50% - 13rem - 2 * var(--space-s)));
+  font-size: var(--text-xs);
+}
+
+@media (min-width: 56.01rem) {
+  .wall__intro-links {
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 56rem) {
+  .wall__intro {
+    --intro-from: -1.5rem 0;
+    inset: auto 1rem calc(1rem + env(safe-area-inset-bottom) + var(--bar-h) + 0.6rem) 1rem;
+    inline-size: auto;
+  }
+}
+
+/* frosted, the space showing through, under the white of what the list is */
+.wall__intro-card {
+  position: relative;
+  animation: wall-intro-in 0.55s cubic-bezier(0.3, 0.7, 0, 1) 0.35s both;
+  overflow: hidden;
+  padding: 0 var(--space-s) calc(var(--space-s) + 1.6rem);
+  border-radius: 1rem;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--paper) 60%, transparent);
+  backdrop-filter: blur(16px) saturate(1.4);
+}
+
+.wall__intro-about {
+  margin-inline: calc(-1 * var(--space-s));
+  padding: calc(var(--space-s) + 0.45rem) var(--space-s) var(--space-s);
+  background: var(--paper);
+}
+
+.wall__intro p {
+  margin: 0;
+}
+
+.wall__intro p + p {
+  margin-block-start: var(--space-2xs);
+}
+
+.wall__intro-title {
+  font-size: var(--text-base);
+  font-weight: var(--weight-display);
+  line-height: 1.2;
+}
+
+/* the invitation folded under its count (others did it already), open and closed with a
+   glide where the browser can animate a details' content, at once where it can't */
+.wall__intro-adopt {
+  margin-block-start: var(--space-s);
+  interpolate-size: allow-keywords;
+}
+
+.wall__intro-adopt::details-content {
+  block-size: 0;
+  overflow: clip;
+  transition:
+    block-size 0.35s cubic-bezier(0.3, 0.7, 0, 1),
+    content-visibility 0.35s allow-discrete;
+}
+
+.wall__intro-adopt[open]::details-content {
+  block-size: auto;
+}
+
+/* the text comes in as it opens: down a little into place, fading in */
+.wall__intro-adopt p {
+  padding-block-start: 0.7em;
+  opacity: 0;
+  translate: 0 -0.4em;
+  transition:
+    opacity 0.3s ease,
+    translate 0.35s cubic-bezier(0.3, 0.7, 0, 1);
+}
+
+.wall__intro-adopt[open] p {
+  opacity: 1;
+  translate: 0 0;
+  transition-delay: 0.08s;
+}
+
+.wall__intro-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  list-style: none;
+  cursor: pointer;
+}
+
+.wall__intro-stat::-webkit-details-marker {
+  display: none;
+}
+
+/* a chevron that turns as it opens */
+.wall__intro-stat::after {
+  content: "";
+  inline-size: 0.45em;
+  block-size: 0.45em;
+  margin-block-start: -0.2em;
+  border-inline-end: 2px solid currentColor;
+  border-block-end: 2px solid currentColor;
+  rotate: 45deg;
+  transition:
+    rotate 0.35s cubic-bezier(0.3, 0.7, 0, 1),
+    margin 0.35s cubic-bezier(0.3, 0.7, 0, 1);
+}
+
+.wall__intro-adopt[open] .wall__intro-stat::after {
+  margin-block-start: 0.2em;
+  rotate: 225deg;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wall__intro-adopt::details-content,
+  .wall__intro-adopt p,
+  .wall__intro-stat::after {
+    transition: none;
+  }
+}
+
+/* the way there, in the adoption's own foil */
+.wall__intro-links .wall__intro-cta {
+  padding: 0 0.9rem;
+  border-radius: 999px;
+  color: var(--ink);
+  text-decoration: none;
+  background:
+    repeating-linear-gradient(115deg, rgb(255 255 255 / 0.35) 0 2px, transparent 2px 5px),
+    linear-gradient(90deg, #ff9ad5, #ffd6a1, #fdff9e, #a6ffd8, #a6e3ff, #c3a6ff, #ff9ad5);
+  background-size:
+    auto,
+    12em 100%;
+  background-repeat: repeat, repeat-x;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.6);
+  animation:
+    wall-intro-up 0.5s cubic-bezier(0.3, 0.7, 0, 1) 0.55s both,
+    holo-drift 5s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wall__intro-links .wall__intro-cta {
+    animation: none;
+  }
+}
+
+.wall__intro-adopt i {
+  font-style: normal;
+  font-weight: var(--weight-label);
+  white-space: nowrap;
+}
+
+/* a row as high as the tabs beside it, its buttons as high as theirs and on their line,
+   the card's end under their middle; they come in after the card, one after the other */
+/* closed: it goes as it came */
+.wall__intro.is-leaving {
+  opacity: 0;
+  translate: var(--intro-from);
+  transition:
+    opacity 0.25s ease,
+    translate 0.3s cubic-bezier(0.7, 0, 0.7, 0.3);
+}
+
+/* a small × in the card's corner, for those who look for one */
+.wall__intro-x {
+  position: absolute;
+  inset: 0.35rem 0.35rem auto auto;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  inline-size: 1.6rem;
+  block-size: 1.6rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--ink);
+  background: none;
+  cursor: pointer;
+}
+
+.wall__intro-x svg {
+  inline-size: 0.9rem;
+  block-size: 0.9rem;
+}
+
+.wall__intro-x:hover,
+.wall__intro-x:focus-visible {
+  outline: none;
+  color: var(--paper);
+  background: var(--ink);
+}
+
+@keyframes wall-intro-up {
+  from {
+    opacity: 0;
+    translate: 0 1rem;
+  }
+}
+
+.wall__intro-links {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  block-size: 3.2rem;
+  margin-block-start: -1.6rem;
+  padding-inline: var(--space-s);
+}
+
+.wall__intro-links > * {
+  display: inline-flex;
+  align-items: center;
+  block-size: 2.6rem;
+  animation: wall-intro-up 0.5s cubic-bezier(0.3, 0.7, 0, 1) 0.55s both;
+}
+
+.wall__intro-links > * + * {
+  animation-delay: 0.65s;
+}
+
+.wall__intro-links a,
+.wall__intro-links button {
+  white-space: nowrap;
+  color: inherit;
+  font-weight: var(--weight-label);
+}
+
+.wall__intro-links button,
+.wall__zoom button {
+  border: 0;
+  color: var(--paper);
+  background: var(--ink);
+  font: inherit;
+  font-weight: var(--weight-label);
+  cursor: pointer;
+}
+
+.wall__intro-links button {
+  padding: 0 0.9rem;
+  border-radius: 999px;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.wall__bar,
+.wall__corner,
+.wall__models,
+.wall__pick-list,
+.wall__zoom {
+  transition:
+    opacity 0.35s ease,
+    translate 0.55s cubic-bezier(0.3, 0.7, 0, 1);
+}
+
+.wall:not(.is-opening) .wall__zoom {
+  transition-delay: 50ms;
+}
+
+.wall:not(.is-opening) .wall__models {
+  transition-delay: 100ms;
+}
+
+.wall:not(.is-opening) .wall__pick-list {
+  transition-delay: 150ms;
+}
+
+.wall:not(.is-opening) .wall__corner {
+  transition-delay: 200ms;
+}
+
+.wall.is-opening .wall__bar {
+  translate: 0 -110%;
+}
+
+.wall.is-opening .wall__models,
+.wall.is-opening .wall__pick-list {
+  translate: 0 calc(100% + var(--space-s) + 1rem);
+}
+
+.wall.is-opening .wall__zoom {
+  translate: calc(100% + var(--space-s)) 0;
+}
+
+.wall.is-opening .wall__corner {
+  translate: calc(-100% - var(--space-s)) 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wall.is-opening .wall__bar,
+  .wall.is-opening .wall__models,
+  .wall.is-opening .wall__pick-list,
+  .wall.is-opening .wall__zoom,
+  .wall.is-opening .wall__corner {
+    translate: none;
+  }
+}
+
+.wall.is-opening .wall__bar,
+.wall.is-opening .wall__corner,
+.wall.is-opening .wall__intro,
+.wall.is-opening .wall__models,
+.wall.is-opening .wall__pick-list,
+.wall.is-opening .wall__zoom {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.wall__handoff {
+  position: absolute;
+  inset: 0 auto auto 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.wall__handoff {
+  transform-origin: 50% 50%;
+}
+
+.wall__handoff.is-travelling {
+  transition: transform 0.75s cubic-bezier(0.65, 0, 0.25, 1);
+}
+
+.wall__handoff.is-travelling .swatchcard {
+  transition:
+    inline-size 0.75s cubic-bezier(0.65, 0, 0.25, 1),
+    font-size 0.75s cubic-bezier(0.65, 0, 0.25, 1);
+}
+
+.color-hero .hero__content > *,
+.color-hero__close {
+  transition:
+    opacity 0.6s ease,
+    translate 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.color-hero .hero__content > :nth-child(2) {
+  transition-delay: 0.12s;
+}
+
+.color-hero .hero__content > :nth-child(3),
+.color-hero__close {
+  transition-delay: 0.24s;
+}
+
+/* the adopt button comes last */
+.color-hero .hero__stats a.adopt-cta {
+  transition:
+    opacity 0.6s ease 0.4s,
+    translate 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.4s,
+    scale 0.2s ease;
+}
+
+.is-arriving .color-hero .hero__content > *,
+.is-arriving .color-hero__close,
+.is-arriving .color-hero .hero__stats a.adopt-cta {
+  opacity: 0;
+  translate: 0 0.6rem;
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .color-hero .hero__content > *,
+  .color-hero__close,
+  .color-hero .hero__stats a.adopt-cta {
+    transition: none;
+  }
+}
+
+.wall__page {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  background: var(--ink);
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.wall__page.is-leaving {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.wall__handoff.is-returning,
+.wall__handoff.is-arriving {
+  z-index: 6;
+}
+
+.wall__probe {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.wall__dock:has([data-list-menu]:not([hidden])) {
+  z-index: 4;
+}
+
+/* the models and the lists sit together on one frosted pill over the colors */
+.wall__dock {
+  --glass: transparent;
+  position: absolute;
+  inset: auto auto var(--space-s) 50%;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem;
+  border-radius: 999px;
+  background: var(--glass);
+  backdrop-filter: blur(16px) saturate(1.4);
+  transform: translateX(-50%);
+  transition:
+    opacity 0.35s ease,
+    translate 0.55s cubic-bezier(0.3, 0.7, 0, 1);
+}
+
+/* held at their start while the rest is away, so they come in after it (index.html) */
+.wall.is-opening :is(.wall__intro-card, .wall__intro-links > *) {
+  animation-play-state: paused;
+}
+
+.wall.is-opening .wall__dock {
+  opacity: 0;
+  translate: 0 calc(100% + var(--space-s) + 1rem);
+}
+
+.wall__models {
+  position: relative;
+  display: flex;
+  gap: 0.2rem;
+  padding: 0.25rem;
+  border-radius: 999px;
+  background: var(--paper);
+}
+
+.wall__pick-list {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.wall__pick-list svg {
+  display: block;
+  inline-size: 1.1rem;
+  margin: auto;
+}
+
+.wall__pick-list > button {
+  inline-size: 2.6rem;
+  block-size: 2.6rem;
+  border: 0;
+  border-radius: 50%;
+  color: var(--ink);
+  background: var(--paper);
+  cursor: pointer;
+}
+
+.wall__models button {
+  position: relative;
+  z-index: 1;
+  padding: 0.45rem 0.9rem;
+  border: 0;
+  border-radius: 999px;
+  color: var(--ink);
+  background: none;
+  transition: color 0.3s ease;
+  font: inherit;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  cursor: pointer;
+}
+
+.wall__models button[aria-pressed="true"] {
+  color: var(--paper);
+}
+
+.wall__models-thumb {
+  position: absolute;
+  inset-block: 0.25rem;
+  left: 0;
+  inline-size: var(--w, 0);
+  border-radius: 999px;
+  background: var(--ink);
+  translate: var(--x, 0) 0;
+  transition:
+    translate 0.5s cubic-bezier(0.34, 1.4, 0.5, 1),
+    inline-size 0.5s cubic-bezier(0.34, 1.4, 0.5, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wall__models-thumb,
+  .wall__models button {
+    transition: none;
+  }
+}
+
+.wall__models button:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: -3px;
+}
+
+.wall__zoom {
+  position: absolute;
+  inset: auto calc(var(--space-s) - 0.3rem) calc(var(--space-s) - 0.3rem) auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.3rem;
+  border-radius: 999px;
+  backdrop-filter: blur(16px) saturate(1.4);
+}
+
+.wall__zoom [data-home] {
+  transition:
+    opacity 0.3s ease,
+    translate 0.45s cubic-bezier(0.3, 0.7, 0, 1),
+    margin 0.45s cubic-bezier(0.3, 0.7, 0, 1),
+    visibility 0s linear;
+}
+
+.wall:not(.is-away) .wall__zoom [data-home] {
+  margin-block-start: calc(-2.6rem - 0.4rem);
+  opacity: 0;
+  translate: calc(100% + var(--space-s)) 0;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease,
+    translate 0.35s ease,
+    margin 0.35s ease 0.1s,
+    visibility 0s linear 0.35s;
+}
+
+.wall__zoom svg {
+  display: block;
+  inline-size: 1.1rem;
+  margin: auto;
+}
+
+.wall__zoom button {
+  inline-size: 2.6rem;
+  block-size: 2.6rem;
+  border-radius: 50%;
+  color: var(--ink);
+  background: var(--paper);
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.wall__lists {
+  position: absolute;
+  inset: auto 0 calc(100% + 0.6rem) auto;
+  display: grid;
+  gap: 0.2rem;
+  min-inline-size: 13rem;
+  padding: 0.3rem;
+  border-radius: 1rem;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.wall__lists[hidden] {
+  display: none;
+}
+
+/* hidden until the script fills it, else a stray dot shows */
+.wall__dock:has(.wall__models:empty) {
+  display: none;
+}
+
+.wall__lists button {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-s);
+  inline-size: auto;
+  block-size: auto;
+  padding: 0.5rem 0.75rem;
+  border: 0;
+  border-radius: 0.7rem;
+  color: var(--ink);
+  background: none;
+  font: inherit;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  text-align: start;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.wall__lists button small {
+  font-size: inherit;
+  font-weight: var(--weight-body);
+}
+
+.wall__lists button:hover,
+.wall__lists button:focus-visible,
+.wall__lists button[aria-checked="true"] {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.wall__list {
+  display: flex;
+  align-items: stretch;
+  gap: 0.2rem;
+}
+
+.wall__list button {
+  flex: 1;
+}
+
+.wall__list-file {
+  display: grid;
+  place-items: center;
+  inline-size: 2rem;
+  border-radius: 0.7rem;
+  color: var(--ink);
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.wall__list-file svg {
+  inline-size: 0.95rem;
+  block-size: 0.95rem;
+}
+
+.wall__list-file:hover,
+.wall__list-file:focus-visible {
+  outline: none;
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.wall__lists button:focus-visible {
+  outline: none;
+  box-shadow:
+    inset 0 0 0 2px var(--paper),
+    0 0 0 2px var(--ink);
+}
+
+.wall__zoom button:focus-visible,
+.wall__intro-links button:focus-visible,
+.wall__result:focus-visible {
+  outline: 3px solid var(--paper);
+  outline-offset: 2px;
+}
+
+@media (max-width: 40rem) {
+  .brand {
+    top: var(--space-2xs);
+    left: 1rem;
+  }
+}
+
+@media (max-width: 56rem) {
+  .wall__bar {
+    inset: 0;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: 2.5rem 1fr auto;
+    gap: var(--space-2xs) var(--space-s);
+    padding: var(--space-2xs) 1rem calc(1rem + env(safe-area-inset-bottom));
+  }
+
+  .wall__nav {
+    display: none;
+  }
+
+  .wall__burger {
+    position: relative;
+    display: block;
+    grid-row: 1;
+    grid-column: 2;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    color: var(--ink);
+    background: var(--paper);
+    cursor: pointer;
+  }
+
+  .wall__burger span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    inline-size: 1.1rem;
+    block-size: 2px;
+    margin: -1px 0 0 -0.55rem;
+    border-radius: 2px;
+    background: currentColor;
+    transition:
+      translate 0.2s ease 0.18s,
+      rotate 0.2s ease;
+  }
+
+  .wall__burger span:first-child {
+    translate: 0 -0.22rem;
+  }
+
+  .wall__burger span:last-child {
+    translate: 0 0.22rem;
+  }
+
+  .wall__burger[aria-expanded="true"] span {
+    translate: 0 0;
+    transition:
+      translate 0.2s ease,
+      rotate 0.3s cubic-bezier(0.3, 0.7, 0, 1.4) 0.18s;
+  }
+
+  .wall__burger[aria-expanded="true"] span:first-child {
+    rotate: 45deg;
+  }
+
+  .wall__burger[aria-expanded="true"] span:last-child {
+    rotate: -45deg;
+  }
+
+  .wall__burger:focus-visible {
+    outline: 3px solid var(--paper);
+    outline-offset: 2px;
+  }
+
+  .wall__find {
+    grid-row: 3;
+    grid-column: 1 / -1;
+  }
+
+  .wall__results {
+    inset: auto 0 calc(100% + 0.5rem);
+    max-block-size: 50svh;
+    overflow-y: auto;
+  }
+
+  .wall__find,
+  .wall__burger {
+    transition: translate 0.55s cubic-bezier(0.3, 0.7, 0, 1);
+  }
+
+  .wall.is-opening .wall__bar {
+    translate: none;
+  }
+
+  .wall.is-opening .wall__find {
+    translate: 0 calc(100% + 2rem);
+  }
+
+  .wall.is-opening .wall__burger {
+    translate: 0 -200%;
+  }
+
+  .wall__brand {
+    top: var(--space-2xs);
+    left: 1rem;
+  }
+
+  .wall__dock:not(:has(.wall__models:empty)) {
+    display: contents;
+  }
+
+  /* only the models get the frosted ring on a phone */
+  .wall__tabs {
+    position: absolute;
+    z-index: 2;
+    top: var(--space-2xs);
+    right: calc(1rem + 2.5rem + 0.4rem);
+    display: flex;
+    max-inline-size: calc(100% - 2 * (1rem + 2.5rem + 0.4rem));
+    block-size: 2.5rem;
+    padding: 0.2rem;
+    box-sizing: border-box;
+    border-radius: 999px;
+    background: var(--glass);
+    backdrop-filter: blur(16px) saturate(1.4);
+  }
+
+  /* the white pill under the models, so their fade below leaves it whole */
+  .wall__tabs::before {
+    content: "";
+    position: absolute;
+    inset: 0.2rem;
+    border-radius: 999px;
+    background: var(--paper);
+  }
+
+  .wall__models {
+    min-inline-size: 0;
+    padding: 0.15rem calc(0.35rem - 1px);
+    overflow-x: auto;
+    scrollbar-width: none;
+    background: none;
+  }
+
+  .wall__models button {
+    padding-block: 0.3rem;
+  }
+
+  .wall__models::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* a mask, not gradients laid on top: it fades the names themselves, to the row's very edge */
+  .wall__models {
+    --fade-start: 0rem;
+    --fade-end: 0rem;
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 var(--fade-start),
+      #000 calc(100% - var(--fade-end)),
+      transparent
+    );
+    transition:
+      --fade-start 0.2s ease,
+      --fade-end 0.2s ease;
+  }
+
+  .wall__models.has-before {
+    --fade-start: 1.5rem;
+  }
+
+  .wall__models.has-after {
+    --fade-end: 1.5rem;
+  }
+
+  .wall__models button {
+    flex: none;
+  }
+
+  .wall__pick-list,
+  .wall__zoom {
+    position: absolute;
+    z-index: 2;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .wall__pick-list {
+    z-index: 4;
+    top: calc(var(--space-2xs) + 2.5rem + 0.4rem);
+    bottom: auto;
+    left: auto;
+  }
+
+  .wall__zoom {
+    top: calc(var(--space-2xs) + 2 * (2.5rem + 0.4rem));
+    bottom: auto;
+    padding: 0;
+    backdrop-filter: none;
+  }
+
+  .wall__pick-list > button,
+  .wall__zoom button {
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+  }
+
+  .wall:not(.is-away) .wall__zoom [data-home] {
+    margin-block-start: calc(-2.5rem - 0.4rem);
+  }
+
+  .wall__lists {
+    inset: 0 calc(100% + 0.4rem) auto auto;
+  }
+
+  .wall__corner {
+    inset: auto 1rem calc(1rem + env(safe-area-inset-bottom) + var(--bar-h) + 0.6rem) 1rem;
+    max-inline-size: none;
+  }
+
+  .wall__tabs {
+    clip-path: inset(0 round 999px);
+    transition:
+      clip-path 0.45s cubic-bezier(0.3, 0.7, 0, 1),
+      opacity 0.2s ease,
+      visibility 0s linear;
+  }
+
+  :is(.wall__pick-list > button, .wall__zoom button, .wall__zoom [data-home], .wall__modes) {
+    transition:
+      opacity 0.3s ease var(--menu-in),
+      translate 0.45s cubic-bezier(0.3, 0.7, 0, 1) var(--menu-in),
+      margin 0.45s cubic-bezier(0.3, 0.7, 0, 1),
+      visibility 0s linear var(--menu-in);
+  }
+
+  .wall__pick-list > button {
+    --menu-in: 60ms;
+    --menu-out: 80ms;
+  }
+
+  .wall__modes {
+    --menu-in: 110ms;
+    --menu-out: 40ms;
+  }
+
+  /* under it, down along the screen's edge as the menu runs */
+  .wall__zoom .wall__mode-hint {
+    top: calc(100% + 0.5rem);
+    right: 50%;
+    writing-mode: vertical-rl;
+    translate: 50% 0;
+  }
+
+  .wall__zoom .wall__mode-hint.is-leaving {
+    translate: 50% -1rem;
+  }
+
+  /* center comes between the list and the views, so while it's shown the views wait for it */
+  .wall__zoom [data-home] {
+    --menu-in: 110ms;
+    --menu-out: 40ms;
+  }
+
+  .wall.is-away .wall__modes {
+    --menu-in: 160ms;
+    --menu-out: 0ms;
+  }
+
+  .wall:not(:has([data-menu][aria-expanded="true"])) .wall__tabs {
+    clip-path: inset(0 0 0 calc(100% - 2.5rem) round 999px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      clip-path 0.3s ease,
+      opacity 0.2s ease 0.1s,
+      visibility 0s linear 0.3s;
+  }
+
+  .wall:not(:has([data-menu][aria-expanded="true"])) :is(.wall__pick-list > button, .wall__zoom button, .wall__modes) {
+    opacity: 0;
+    translate: 0 -0.75rem;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 0.2s ease var(--menu-out),
+      translate 0.3s ease var(--menu-out),
+      margin 0.3s ease,
+      visibility 0s linear calc(0.3s + var(--menu-out));
+  }
+
+  .wall__brand span {
+    display: inline-block;
+    max-inline-size: 8rem;
+    overflow: hidden;
+    white-space: nowrap;
+    transition:
+      max-inline-size 0.4s cubic-bezier(0.3, 0.7, 0, 1),
+      opacity 0.25s ease;
+  }
+
+  .wall__brand {
+    transition:
+      padding 0.4s cubic-bezier(0.3, 0.7, 0, 1),
+      gap 0.4s cubic-bezier(0.3, 0.7, 0, 1);
+  }
+
+  .wall:has([data-menu][aria-expanded="true"]) .wall__brand {
+    gap: 0;
+    padding-inline: calc((2.5rem - 1.45rem * 130 / 158) / 2);
+  }
+
+  .wall:has([data-menu][aria-expanded="true"]) .wall__brand span {
+    max-inline-size: 0;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(.wall__intro-card, .wall__intro-links > *) {
+    animation: none;
+  }
+}
+
+/* A–Z: every name as a bar in its own color, as the first site had them */
+.az {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.az[hidden] {
+  display: none;
+}
+
+/* coming in: the fading space still shows through, then the rows in view arrive one after
+   another, 30ms apart (--i: a row's place among them, set in az.js) */
+.az.is-entering {
+  background: transparent;
+}
+
+.az.is-entering .az__row {
+  animation: az-row-in 420ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  animation-delay: calc(var(--az-delay, 0ms) + var(--i, 0) * 30ms);
+}
+
+@keyframes az-row-in {
+  from {
+    opacity: 0;
+    translate: 0 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .az.is-entering .az__row {
+    animation: none;
+  }
+}
+
+/* focus can't nudge the wall sideways while the list is up */
+.wall.is-az {
+  overflow: clip;
+}
+
+/* the list runs under the header; only its start leaves room for it */
+.az__list {
+  --az-top: calc(var(--bar-h) + var(--space-xs));
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: var(--paper) var(--ink);
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.az__sizer {
+  margin-block: var(--az-top) var(--az-bottom, 0px);
+}
+
+.az__rows {
+  position: absolute;
+  inset: var(--az-top) 0 auto;
+}
+
+.az__row {
+  --ink-on: var(--ink);
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-s);
+  block-size: 64px;
+  padding: 0 var(--az-right, var(--space-s)) 0 var(--az-left, var(--space-s));
+  overflow: hidden;
+  color: var(--ink);
+  background: var(--c);
+  text-decoration: none;
+}
+
+.az__row.is-dark {
+  --ink-on: var(--paper);
+  color: var(--paper);
+}
+
+/* hovered: the text's color rises from the bottom of the bar, the name turns the bar's color */
+.az__row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--ink-on);
+  transform: scaleY(0);
+  transform-origin: 50% 100%;
+  transition: transform 0.28s cubic-bezier(0.3, 0.7, 0, 1);
+}
+
+.az__row {
+  transition: color 0.2s ease;
+}
+
+.az__row:focus-visible {
+  color: var(--c);
+}
+
+.az__row:focus-visible::before {
+  transform: scaleY(1);
+}
+
+/* only a real pointer hovers: a touch screen leaves the row under the finger "hovered"
+   once a scroll stops */
+/* the one the dice landed on, as if hovered */
+.az__row.is-picked {
+  color: var(--c);
+}
+
+.az__row.is-picked::before {
+  transform: scaleY(1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .az__row:hover {
+    color: var(--c);
+  }
+
+  .az__row:hover::before {
+    transform: scaleY(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .az__row,
+  .az__row::before {
+    transition: none;
+  }
+}
+
+.az__row strong {
+  overflow: hidden;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-display);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* in pixel art, the name's drawing in front of it; the name then takes the room between */
+.az__icon {
+  flex: none;
+  min-inline-size: 48px;
+  block-size: 48px;
+  margin-inline-end: calc(var(--space-xs) - var(--space-s));
+  image-rendering: pixelated;
+}
+
+.az__icon + strong {
+  flex: 1;
+}
+
+.az__row span {
+  flex: none;
+  font-size: var(--text-base);
+  font-weight: var(--weight-label);
+  font-feature-settings: "tnum" 1;
+  text-transform: uppercase;
+}
+
+.az__row:focus-visible {
+  outline: none;
+}
+
+/* a search that finds nothing: over the empty list, where the names would be */
+.az__none {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--space-s);
+  padding-inline: var(--gutter);
+  pointer-events: none;
+}
+
+.az__none[hidden] {
+  display: none;
+}
+
+.az__none-title {
+  max-width: 14ch;
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-display);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.az__none-link {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  text-transform: uppercase;
+  pointer-events: auto;
+}
+
+/* how many names show, for screen readers only */
+.az__said {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* cells and pixel art are views of the space, not of the list */
+.wall.is-az .wall__modes {
+  display: none;
+}
+
+/* the list has no space to go back to the whole of: no center button, no frosted group */
+.wall.is-az .wall__zoom [data-home] {
+  display: none;
+}
+
+.wall.is-az .wall__zoom {
+  backdrop-filter: none;
+}
+
+/* the certificate on the thank-you page: paper, a double frame, the color's rosette and seal */
+.adopt-cert {
+  display: grid;
+  place-items: center;
+  padding-block: var(--space-xl);
+  color: var(--ink);
+  background: var(--paper);
+  border-block-end: 1px solid var(--ink);
+}
+
+.adopt-cert[hidden] {
+  display: none;
+}
+
+.cert {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  gap: var(--space-xs);
+  inline-size: min(100%, 44rem);
+  padding: clamp(1.5rem, 6vw, 3.5rem);
+  overflow: hidden;
+  text-align: center;
+  background: var(--paper);
+  outline: 2px solid var(--ink);
+  outline-offset: -0.6rem;
+  box-shadow:
+    inset 0 0 0 0.85rem var(--paper),
+    inset 0 0 0 0.92rem var(--ink),
+    0 1.5rem 4rem rgb(0 0 0 / 0.12);
+}
+
+.cert__guilloche {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  inline-size: 100%;
+  block-size: 100%;
+  color: var(--cert-line);
+  opacity: 0.35;
+}
+
+.cert[data-tone="dark"] .cert__guilloche {
+  opacity: 0.16;
+}
+
+.cert__seal-edge {
+  display: none;
+}
+
+.cert[data-tone="light"] .cert__seal-edge {
+  display: inline;
+}
+
+.cert[data-tone="light"] .cert__card {
+  outline: 1px solid var(--cert-line);
+}
+
+.cert__head {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-xs);
+  text-align: start;
+  inline-size: 100%;
+  margin-block-end: var(--space-s);
+}
+
+.cert__no {
+  flex: none;
+  font-feature-settings: "tnum" 1;
+}
+
+.cert__title {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  font-weight: var(--weight-display);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.cert__line {
+  margin: var(--space-s) 0 0;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cert__who {
+  margin: 0;
+  font-size: clamp(1.6rem, 4.5vw, 2.4rem);
+  font-weight: var(--weight-display);
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+
+.cert__card {
+  inline-size: 14rem;
+  margin-block: var(--space-xs) var(--space-2xs);
+  font-size: 2.87rem;
+  background: #fff;
+  outline: 2px solid #fff;
+}
+
+.cert__card,
+.cert__card * {
+  transition: none;
+}
+
+.cert__facts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-xs) var(--space-m);
+  margin: var(--space-m) 0 0;
+}
+
+.cert__facts dd {
+  margin: 0.2em 0 0;
+  font-weight: var(--weight-display);
+  font-feature-settings: "tnum" 1;
+}
+
+.cert__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-m);
+  inline-size: 100%;
+  margin-block-start: var(--space-l);
+  text-align: start;
+}
+
+.cert__sign {
+  min-inline-size: 0;
+}
+
+.cert__sign p {
+  margin: 0;
+}
+
+.cert__signature {
+  display: inline-block;
+  min-inline-size: min(12rem, 100%);
+  padding: 0 0.2em;
+  white-space: nowrap;
+  border-block-end: 1px solid var(--ink);
+  font-family: "Mrs Saint Delafield", cursive;
+  font-size: 3.2rem;
+  font-weight: 400;
+  line-height: 0.75;
+}
+
+.cert__signature span {
+  display: inline-block;
+  transform-origin: 20% 80%;
+}
+
+.cert__sign .label {
+  margin-block-start: 0.6em;
+}
+
+.cert__seal {
+  flex: none;
+  inline-size: clamp(5.5rem, 16vw, 7.5rem);
+  color: var(--cert-c);
+  rotate: -12deg;
+}
+
+.cert__fine {
+  max-inline-size: 46ch;
+  margin: var(--space-m) 0 0;
+  font-size: var(--text-xs);
+  opacity: 0.7;
+}
+
+.cert__print {
+  justify-content: center;
+}
+
+/* printed, the page is the certificate alone, on one sheet, in its colors */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  .color-page > :not(.adopt-cert),
+  .adopt-cert > :not(.cert) {
+    display: none !important;
+  }
+
+  .adopt-cert {
+    display: block;
+    min-block-size: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .cert {
+    inline-size: 100%;
+    block-size: 276mm;
+    margin: 0;
+    align-content: space-evenly;
+    gap: 0;
+    overflow: hidden;
+    box-shadow:
+      inset 0 0 0 0.85rem var(--paper),
+      inset 0 0 0 0.92rem var(--ink);
+    break-inside: avoid;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .cert__card {
+    inline-size: 11rem;
+    font-size: 2.255rem;
+  }
+
+  .cert__foot {
+    margin-block-start: 0;
+  }
+
+  .cert * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+.cert__print button:hover,
+.cert__print button:focus-visible {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+/* in pixel art (pixel-mode.js) every card wears its drawing, as the art section's does */
+.swatchcard__pixel {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: none;
+  inline-size: 100%;
+  block-size: 100%;
+  image-rendering: pixelated;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease calc(var(--anim-appear-delay, 0ms) + var(--anim-appear-duration, 1100ms) * 0.6);
+}
+
+.is-pixel .swatchcard__pixel {
+  display: block;
+}
+
+.is-pixel .swatchcard--visible .swatchcard__pixel {
+  opacity: 1;
+}
+
+/* the drawing that came along from the space: there at once, the card building up under it */
+.is-pixel .swatchcard__pixel--now {
+  opacity: 1;
+  transition: none;
+}
+
+.wall__handoff.is-pixel .swatchcard__swatch,
+.wall__handoff.is-pixel .swatchcard__label {
+  opacity: 0;
+}
+
+/* the space's views: a single button, the view shown; pressed, the other two slide out to its
+   left and it's a row of tabs, as the models are; picked, it's one button again */
+.wall__modes {
+  position: relative;
+  inline-size: 2.6rem;
+  block-size: 2.6rem;
+}
+
+.wall__mode-list {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0;
+  border-radius: 999px;
+  background: var(--paper);
+  transition: box-shadow 0.35s ease;
+}
+
+.wall__modes.is-open .wall__mode-list {
+  box-shadow: 0 0.4rem 1.4rem rgb(0 0 0 / 0.25);
+}
+
+/* beside the switch until it's opened (wall.js); under it, so the switch opens over it as
+   it goes */
+.wall__mode-hint {
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  right: calc(100% + 0.6rem);
+  color: var(--paper);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-label);
+  line-height: 1.2;
+  white-space: nowrap;
+  text-shadow: 0 0 0.6rem rgb(0 0 0 / 0.6);
+  cursor: pointer;
+  translate: 0 -50%;
+  transition:
+    opacity 0.18s ease,
+    translate 0.35s cubic-bezier(0.3, 0.7, 0, 1);
+}
+
+/* on a wide screen, the open views' names, left of them, the one hovered */
+.wall__mode-name {
+  display: none;
+}
+
+@media (hover: hover) and (min-width: 56.01rem) {
+  .wall__mode-name {
+    position: absolute;
+    top: 50%;
+    right: calc(100% + 0.6rem);
+    display: block;
+    color: var(--paper);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-label);
+    line-height: 1.2;
+    white-space: nowrap;
+    text-shadow: 0 0 0.6rem rgb(0 0 0 / 0.6);
+    pointer-events: none;
+    opacity: 0;
+    translate: 0.5rem -50%;
+    transition:
+      opacity 0.18s ease,
+      translate 0.35s cubic-bezier(0.3, 0.7, 0, 1);
+  }
+
+  .wall__modes.is-open:not(.is-fading):has([data-mode]:hover) .wall__mode-name {
+    opacity: 1;
+    translate: 0 -50%;
+  }
+}
+
+.wall__mode-hint[hidden] {
+  display: none;
+}
+
+.wall__mode-hint.is-leaving {
+  opacity: 0;
+  translate: 1rem -50%;
+}
+
+.wall__zoom .wall__mode-list button {
+  flex: none;
+  padding: 0;
+  inline-size: 2.6rem;
+  block-size: 2.6rem;
+  overflow: hidden;
+  transition:
+    inline-size 0.35s cubic-bezier(0.3, 0.7, 0, 1),
+    margin 0.35s cubic-bezier(0.3, 0.7, 0, 1),
+    opacity 0.25s ease,
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.wall__modes:not(.is-open) .wall__mode-list button[aria-checked="false"] {
+  inline-size: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.wall__modes.is-open .wall__mode-list {
+  gap: 0.15rem;
+}
+
+.wall__zoom .wall__mode-list button {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
+
+.wall__modes.is-marked .wall__mode-list button[aria-checked="true"],
+.wall__modes.is-picking .wall__mode-list button.is-target {
+  color: var(--paper);
+}
+
+.wall__modes.is-picking .wall__mode-list button[aria-checked="true"]:not(.is-target) {
+  color: var(--ink);
+  transition-delay: 0s;
+}
+
+.wall__modes.is-picking .wall__mode-list button.is-target {
+  transition-delay: 0.1s;
+}
+
+.wall__mode-thumb {
+  position: absolute;
+  inset: 0 auto auto 0;
+  border-radius: 999px;
+  background: var(--ink);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.22s ease,
+    translate 0.35s cubic-bezier(0.3, 0.7, 0, 1),
+    inline-size 0.35s cubic-bezier(0.3, 0.7, 0, 1);
+}
+
+.wall__modes.is-marked .wall__mode-thumb {
+  opacity: 1;
+}
+
+.wall__modes.is-tracking .wall__mode-thumb {
+  transition: opacity 0.25s ease;
+}
+
+/* the view shown stays where the button was, the others open beside it */
+.wall__mode-list button.is-last {
+  order: 1;
+}
+
+/* closing: the other icons fade first, one after the other, before the tabs fold */
+.wall__modes.is-fading .wall__mode-list button[aria-checked="false"] {
+  opacity: 0;
+  transition: opacity 0.18s ease var(--fade-delay, 0ms);
+}

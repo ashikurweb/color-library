@@ -1,0 +1,72 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+/* Preserve the reference site's browser defaults while using Tailwind's theme and utilities. */
+@import "../styles/reference.css";
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-latin-variable.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@theme inline {
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --color-background: #000;
+  --color-foreground: #fff;
+}
+
+body {
+  background: #000;
+  color: #fff;
+}
+[data-page] {
+  min-height: 100svh;
+}
+html:has([data-page="explorer"]),
+body:has([data-page="explorer"]) {
+  overflow: hidden;
+}
+[data-page="explorer"] {
+  height: 100svh;
+  overflow: hidden;
+}
+.runtime-root {
+  display: contents;
+}
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: -5rem;
+  z-index: 1000;
+  padding: 0.7rem 1rem;
+  border-radius: 100px;
+  background: white;
+  color: black;
+}
+.skip-link:focus {
+  top: 1rem;
+}
+.wall {
+  background: #000;
+}
+.adopt__who select {
+  cursor: pointer;
+}
+.runtime-error {
+  position: fixed;
+  z-index: 80;
+  inset: auto 1.5rem 6rem;
+  margin-inline: auto;
+  max-width: 30rem;
+}
+.adopt__cta[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

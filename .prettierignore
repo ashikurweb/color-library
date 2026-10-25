@@ -1,0 +1,8 @@
+.next
+node_modules
+package-lock.json
+public
+src/vendor
+src/styles/reference.css
+playwright-report
+test-results
