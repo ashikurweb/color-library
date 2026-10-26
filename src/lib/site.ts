@@ -1,14 +1,12 @@
 export const SITE = {
-  name: "Color Names",
+  name: "Ashikur Rahman",
+  copyrightOwner: "Ashikur Rahman",
+  github: "https://github.com/ashikurweb",
   description:
-    "Wander through 31,993 color names, each one chosen by a person: a space of color cards, each hanging where its color is.",
+    "Explore 31,993 named colors in an interactive atlas. Find your shade, compare palettes, and make it your own.",
   colorCount: 31_993,
   listVersion: "14.80.0",
-  original: "https://names.color.pizza",
-  repository: "https://github.com/meodai/color-names",
-  source: "https://github.com/meodai/names.color.pizza",
-  media: "https://media.color.pizza",
-  annualCost: 980,
+  version: "1.0.0",
   adoptionMinimum: 5,
 } as const;
 

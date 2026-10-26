@@ -31,40 +31,19 @@ export function getAdoptions(): Readonly<Record<string, Adoption>> {
   return adoptions;
 }
 
-/** Keep artwork on this origin so the same URL works in WebGL, localhost, and production. */
-function localizeMedia<T>(data: T): T {
-  return JSON.parse(JSON.stringify(data).replaceAll(`${SITE.media}/`, "/media/")) as T;
-}
-
+/** All page data is local; viewing a color never contacts another project's server. */
 export const getColorPage = cache(async (slug: string): Promise<ColorPageData | null> => {
   const color = bySlug.get(slug);
   if (!color) return null;
-  const fallback: ColorPageData = {
+  return {
     ...color,
     slug,
     description: descriptions.get(color.name) ?? null,
     adopted: adoptions[slug],
-    looked: null,
-    list: null,
+    looked: { entries: [], words: [], images: [], pictures: [] },
+    list: `/media/lists/${slug}.json`,
+    pixel: { src: `/media/pixel/${slug}.webp`, subject: color.name },
   };
-
-  // Editorial copy and credited artwork are optional. Core color data stays available offline.
-  try {
-    const response = await fetch(`${SITE.original}/color/${encodeURIComponent(slug)}/`, {
-      next: { revalidate: 86_400 },
-      signal: AbortSignal.timeout(8_000),
-    });
-    if (!response.ok) return localizeMedia(fallback);
-    const match = (await response.text()).match(
-      /<script type="application\/json" id="color-data">([\s\S]*?)<\/script>/,
-    );
-    if (!match) return localizeMedia(fallback);
-    const detail = JSON.parse(match[1]) as ColorPageData;
-    if (detail.name !== color.name || detail.hex.toLowerCase() !== color.hex) return localizeMedia(fallback);
-    return localizeMedia({ ...fallback, ...detail, slug });
-  } catch {
-    return localizeMedia(fallback);
-  }
 });
 
 export function getPatrons(): Patron[] {
@@ -84,5 +63,5 @@ export function getPatrons(): Patron[] {
       colors: [...(previous?.colors ?? []), { ...color, slug }],
     });
   }
-  return localizeMedia([...people.values()].sort((a, b) => b.total - a.total));
+  return [...people.values()].sort((a, b) => b.total - a.total);
 }

@@ -1,9 +1,9 @@
 {
-  "name": "color-names",
-  "version": "0.1.0",
+  "name": "ashikur-colors",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "A faithful Next.js recreation of Color Names, with the original MIT-licensed interactive color-space renderer.",
+  "description": "An interactive color atlas and card designer by Ashikur Rahman.",
   "license": "MIT",
   "engines": {
     "node": ">=22.14.0"
@@ -22,12 +22,15 @@
     "check": "npm run lint && npm run typecheck"
   },
   "dependencies": {
+    "@fontsource/instrument-serif": "^5.3.0",
     "color-description": "^0.23.0",
     "culori": "^4.0.2",
     "dittotones": "^0.13.0",
+    "gsap": "^3.15.0",
     "next": "16.4.3",
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1",
@@ -41,5 +44,7 @@
     "prettier": "^3.9.10",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "author": "Ashikur Rahman (https://github.com/ashikurweb)",
+  "homepage": "https://github.com/ashikurweb"
 }

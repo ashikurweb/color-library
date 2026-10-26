@@ -1,39 +1,44 @@
-import { SITE } from "@/lib/site";
+import { normalizeHex } from "@/lib/colors";
+import { colorStudySvg, STUDY_COUNT } from "@/lib/color-studies";
+import { getColorBySlug } from "@/lib/server/color-repository";
+import { colorStudies, pixelTile } from "@/lib/server/local-media";
 
-const CATEGORIES = new Set(["data", "pixel", "pixel-atlas", "art", "avatars", "cards", "lists", "previews"]);
+const CACHE = {
+  "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800",
+  "X-Content-Type-Options": "nosniff",
+};
 
-/** A fixed-host media gateway, shared by normal images, image bitmaps, and WebGL textures. */
-export async function GET(request: Request, { params }: { params: Promise<{ segments: string[] }> }) {
+/** Bounded local media endpoints, with no remote proxy or arbitrary URL input. */
+export async function GET(_request: Request, { params }: { params: Promise<{ segments: string[] }> }) {
   const { segments } = await params;
-  if (
-    !CATEGORIES.has(segments[0]) ||
-    segments.some((part) => !/^[a-zA-Z0-9_.-]+$/.test(part) || part === "." || part === "..")
-  ) {
+  if (segments.some((part) => !/^[a-z0-9_.-]+$/.test(part) || part === "." || part === ".."))
     return new Response("Not found", { status: 404 });
-  }
-  const url = new URL(`${SITE.media}/${segments.map(encodeURIComponent).join("/")}`);
-  const query = new URL(request.url).searchParams;
-  for (const key of ["v", "t", "try"]) if (query.has(key)) url.searchParams.set(key, query.get(key)!);
-  try {
-    const upstream = await fetch(url, {
-      headers: { Origin: SITE.original, Referer: `${SITE.original}/` },
-      signal: AbortSignal.timeout(20_000),
-      next: { revalidate: 86_400 },
-    });
-    if (!upstream.ok)
-      return new Response("Media unavailable", { status: upstream.status === 404 ? 404 : 502 });
-    const contentType = upstream.headers.get("content-type") || "application/octet-stream";
-    const body = contentType.includes("json")
-      ? (await upstream.text()).replaceAll(`${SITE.media}/`, "/media/")
-      : upstream.body;
-    return new Response(body, {
+  if (segments.length === 3 && segments[0] === "studies") {
+    const hex = normalizeHex(segments[1]);
+    const match = segments[2].match(/^(\d{1,2})\.svg$/);
+    const variant = match ? Number(match[1]) : -1;
+    if (!hex || variant < 0 || variant >= STUDY_COUNT) return new Response("Not found", { status: 404 });
+    return new Response(colorStudySvg(hex, variant), {
       headers: {
-        "Content-Type": contentType,
-        "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800",
-        "X-Content-Type-Options": "nosniff",
+        ...CACHE,
+        "Content-Type": "image/svg+xml",
+        "Content-Security-Policy": "default-src 'none'; sandbox",
       },
     });
+  }
+  if (segments.length !== 2 || !["lists", "pixel"].includes(segments[0]))
+    return new Response("Not found", { status: 404 });
+  const suffix = segments[0] === "lists" ? ".json" : ".webp";
+  if (!segments[1].endsWith(suffix)) return new Response("Not found", { status: 404 });
+  const slug = segments[1].slice(0, -suffix.length);
+  const color = getColorBySlug(slug);
+  if (!color) return new Response("Not found", { status: 404 });
+  if (segments[0] === "lists") return Response.json(colorStudies(color, slug), { headers: CACHE });
+  try {
+    return new Response(new Uint8Array(await pixelTile(color, slug)), {
+      headers: { ...CACHE, "Content-Type": "image/webp" },
+    });
   } catch {
-    return new Response("Media temporarily unavailable", { status: 502 });
+    return new Response("Image unavailable", { status: 500 });
   }
 }

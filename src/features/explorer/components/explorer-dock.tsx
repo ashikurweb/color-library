@@ -35,7 +35,7 @@ export function ExplorerDock() {
             </button>
             <a
               className="wall__list-file"
-              href="https://unpkg.com/color-name-list/dist/colornames.json"
+              href="/data/colors.json"
               target="_blank"
               rel="noopener"
               aria-label="The Full list as a JSON file"
@@ -60,7 +60,7 @@ export function ExplorerDock() {
             </button>
             <a
               className="wall__list-file"
-              href="https://unpkg.com/color-name-list/dist/colornames.bestof.json"
+              href="/data/best-of.json"
               target="_blank"
               rel="noopener"
               aria-label="The Best of list as a JSON file"
@@ -85,34 +85,11 @@ export function ExplorerDock() {
             </button>
             <a
               className="wall__list-file"
-              href="https://unpkg.com/color-name-list/dist/colornames.short.json"
+              href="/data/short.json"
               target="_blank"
               rel="noopener"
               aria-label="The Short list as a JSON file"
               title="colornames.short.json"
-            >
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  d="M8 4H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3M11 4h5v5M16 4l-7 7"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                ></path>
-              </svg>
-            </a>
-          </div>
-          <div className="wall__list" role="none">
-            <button type="button" role="menuitemradio" data-list="adopted" aria-checked="false">
-              <span>{"Adopted"}</span>
-              <small>{"by our patrons"}</small>
-            </button>
-            <a
-              className="wall__list-file"
-              href="/supporters/"
-              aria-label="Who adopted them"
-              title="Supporters"
             >
               <svg viewBox="0 0 20 20" aria-hidden="true">
                 <path

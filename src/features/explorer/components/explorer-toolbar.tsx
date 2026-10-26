@@ -1,6 +1,11 @@
+import { SITE } from "@/lib/site";
+
 export function ExplorerToolbar() {
   return (
     <header className="wall__bar">
+      <div className="studio__header-label" aria-hidden="true">
+        <span /> The color playground
+      </div>
       <form className="wall__find" data-find="" role="search" autoComplete="off">
         <label className="wall__picker" title="Pick a color">
           <input
@@ -19,7 +24,7 @@ export function ExplorerToolbar() {
           spellCheck="false"
         />
         <span className="wall__hint" data-hint="" aria-hidden="true">
-          {"Find a name, or paste a hex"}
+          {"Find a color, a feeling, a hex…"}
         </span>
         <button
           type="button"
@@ -44,18 +49,20 @@ export function ExplorerToolbar() {
         <ul className="wall__results" data-results="" hidden></ul>
       </form>
       <nav className="wall__nav" aria-label="Project">
-        <a href="https://github.com/meodai/color-names">
-          {"GitHub"}
-          <span data-version=""></span>
+        <a className="studio__github" href={SITE.github} target="_blank" rel="noopener noreferrer">
+          {"GitHub"} <span aria-hidden="true">↗</span>
+        </a>
+        <a className="studio__create" href="/adopt/" data-magnetic="">
+          {"Create a color card"} <span aria-hidden="true">↗</span>
         </a>
         <button
           type="button"
           className="wall__help"
           data-intro-open=""
-          aria-label="About Color Names"
+          aria-label={`About ${SITE.name}`}
           aria-expanded="false"
         >
-          {" ? "}
+          {"?"}
         </button>
       </nav>
       <button type="button" className="wall__burger" data-menu="" aria-expanded="false" aria-label="Menu">

@@ -64,6 +64,29 @@ body:has([data-page="explorer"]) {
 }
 .adopt__cta[aria-disabled="true"] {
   cursor: not-allowed;
+  opacity: 0.6;
+}
+button.adopt__cta {
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+.supporters__empty {
+  margin-top: 5rem;
+  max-width: 44rem;
+}
+.brand__logo {
+  width: 26px;
+  height: 26px;
+  aspect-ratio: 1;
+}
+@media (max-width: 56rem) {
+  .wall__brand span {
+    max-inline-size: min(12rem, calc(100vw - 8.5rem));
+  }
+  .wall:has([data-menu][aria-expanded="true"]) .wall__brand {
+    padding-inline: calc((2.5rem - 26px) / 2);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   html {

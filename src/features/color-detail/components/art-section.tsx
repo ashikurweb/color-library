@@ -51,19 +51,6 @@ export function ArtSection() {
             <span>{"Animate"}</span>
             <small>{"the rows drift"}</small>
           </button>
-          <hr />
-          <button type="button" role="menuitemcheckbox" data-art-setting="art" aria-checked="true">
-            <span>{"Art"}</span>
-            <small>{"museums"}</small>
-          </button>
-          <button type="button" role="menuitemcheckbox" data-art-setting="pop" aria-checked="true">
-            <span>{"Pop culture"}</span>
-            <small>{"games, albums, films"}</small>
-          </button>
-          <button type="button" role="menuitemcheckbox" data-art-setting="wiki" aria-checked="true">
-            <span>{"Wiki"}</span>
-            <small>{"Wikipedia, Commons"}</small>
-          </button>
         </div>
       </div>
     </section>

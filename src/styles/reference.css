@@ -3196,7 +3196,7 @@ h2:hover > .anchor,
 
 /* bands of light at an angle, a second set across them, and grain */
 .swatchcard--holo::before,
-.holo-parrot {
+.holo-mark {
   background-image:
     var(--grain),
     repeating-linear-gradient(
@@ -3242,7 +3242,7 @@ h2:hover > .anchor,
 /* the classic holo: hue-stepped bars, a rainbow racing across them,
    wide glints at two speeds and a round glare */
 .swatchcard--holo[data-shine="classic"]::before,
-.swatchcard--holo[data-shine="classic"] .holo-parrot {
+.swatchcard--holo[data-shine="classic"] .holo-mark {
   background-image:
     repeating-linear-gradient(
       90deg,
@@ -3329,7 +3329,7 @@ h2:hover > .anchor,
 }
 
 .swatchcard--holo[data-shine="galaxy"]::before,
-.swatchcard--holo[data-shine="galaxy"] .holo-parrot {
+.swatchcard--holo[data-shine="galaxy"] .holo-mark {
   background-image:
     var(--stars),
     repeating-linear-gradient(
@@ -3359,7 +3359,7 @@ h2:hover > .anchor,
 /* each layer's tile big enough that, however far the card turns, it never shows its edge:
    positions stay within 0–100%, sizes and stops scaled so the light moves and looks as before */
 .swatchcard--holo[data-shine="radiant"]::before,
-.swatchcard--holo[data-shine="radiant"] .holo-parrot {
+.swatchcard--holo[data-shine="radiant"] .holo-mark {
   --bar: calc(0.9% * 2.1 / 2.65);
   --hue: calc(4 / 8.5);
   background-image:
@@ -3420,7 +3420,7 @@ h2:hover > .anchor,
 /* nova: fine rainbow rays fanning out from where the light falls, clear at its very center
    and fading away from it, the rainbow turning with the card */
 .swatchcard--holo[data-shine="nova"]::before,
-.swatchcard--holo[data-shine="nova"] .holo-parrot {
+.swatchcard--holo[data-shine="nova"] .holo-mark {
   background-image:
     radial-gradient(circle at var(--fx) var(--fy), #000 0%, #000 4%, #fff 24%, #b0b0b0 42%, #000 88%),
     repeating-conic-gradient(
@@ -3448,7 +3448,7 @@ h2:hover > .anchor,
 
 /* barely a rainbow: a fine printed texture, a faint pastel wash and a strong shine */
 .swatchcard--holo[data-shine="aurora"]::before,
-.swatchcard--holo[data-shine="aurora"] .holo-parrot {
+.swatchcard--holo[data-shine="aurora"] .holo-mark {
   background-image:
     repeating-linear-gradient(35deg, rgb(255 255 255 / 0.16) 0 1px, transparent 1px 3px),
     repeating-linear-gradient(-55deg, rgb(255 255 255 / 0.1) 0 1px, transparent 1px 3px), var(--grain),
@@ -3479,7 +3479,7 @@ h2:hover > .anchor,
 /* gold, after the secret rares: golden light in bands over brushed metal, brighter as the card
    turns. The metal is drawn here, stretched noise, not loaded */
 .swatchcard--holo[data-shine="gold"]::before,
-.swatchcard--holo[data-shine="gold"] .holo-parrot {
+.swatchcard--holo[data-shine="gold"] .holo-mark {
   background-image:
     repeating-linear-gradient(
       110deg,
@@ -3510,7 +3510,7 @@ h2:hover > .anchor,
    glitter of every color, fine and coarse. The glitter is drawn here, noise thresholded per
    channel, not loaded */
 .swatchcard--holo[data-shine="glitter"]::before,
-.swatchcard--holo[data-shine="glitter"] .holo-parrot {
+.swatchcard--holo[data-shine="glitter"] .holo-mark {
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='1' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='9 0 0 0 -5.75 0 9 0 0 -5.75 0 0 9 0 -5.75 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23g)'/%3E%3C/svg%3E"),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='340' height='340'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.42' numOctaves='1' seed='23' stitchTiles='stitch'/%3E%3CfeColorMatrix values='9 0 0 0 -7 0 9 0 0 -7 0 0 9 0 -7 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='340' height='340' filter='url(%23g)'/%3E%3C/svg%3E"),
@@ -3558,13 +3558,13 @@ h2:hover > .anchor,
 /* dodging white or black changes nothing: on the lightest colors the foil
    prints its streaks in, on the darkest it shines them on */
 .swatchcard--holo[data-tone="light"]:not([data-shine="aurora"])::before,
-.swatchcard--holo[data-tone="light"]:not([data-shine="aurora"]) .holo-parrot {
+.swatchcard--holo[data-tone="light"]:not([data-shine="aurora"]) .holo-mark {
   filter: invert(1) hue-rotate(180deg) brightness(1.08) contrast(1.5) saturate(1.1);
   mix-blend-mode: multiply;
 }
 
 .swatchcard--holo[data-tone="dark"]::before,
-.swatchcard--holo[data-tone="dark"] .holo-parrot {
+.swatchcard--holo[data-tone="dark"] .holo-mark {
   mix-blend-mode: screen;
 }
 
@@ -3590,7 +3590,7 @@ h2:hover > .anchor,
 
 /* the parrot stamped in the same foil, its bands running the other way:
    faint face on, bright when tilted */
-.holo-parrot {
+.holo-mark {
   position: absolute;
   z-index: 2;
   bottom: 0.3em;
@@ -3600,7 +3600,7 @@ h2:hover > .anchor,
   pointer-events: none;
   --fx: calc(100% - var(--mx));
   --fy: calc(100% - var(--my));
-  mask: var(--parrot) 0 0 / 100% 100% no-repeat;
+  mask: var(--brand-mark) 0 0 / 100% 100% no-repeat;
 }
 
 /* the foil comes in last, once the card has built up, then follows the light */
@@ -3610,7 +3610,7 @@ h2:hover > .anchor,
   animation: holo-in 0.7s ease calc(var(--anim-appear-duration) * 0.85) backwards;
 }
 
-.swatchcard--holo.swatchcard--visible .holo-parrot {
+.swatchcard--holo.swatchcard--visible .holo-mark {
   opacity: calc(var(--shine) * (0.18 + var(--tilt, 0) * 1.1));
   animation: holo-in 0.7s ease calc(var(--anim-appear-duration) * 0.95) backwards;
 }

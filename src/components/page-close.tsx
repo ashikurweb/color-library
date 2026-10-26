@@ -1,4 +1,6 @@
-export function PageClose({ href = "/", label = "Back to Color Names" }: { href?: string; label?: string }) {
+import { SITE } from "@/lib/site";
+
+export function PageClose({ href = "/", label = `Back to ${SITE.name}` }: { href?: string; label?: string }) {
   return (
     <a className="color-hero__close" href={href} data-close="" aria-label={label}>
       <svg viewBox="0 0 20 20" aria-hidden="true">

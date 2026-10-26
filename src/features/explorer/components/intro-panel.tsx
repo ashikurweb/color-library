@@ -1,41 +1,25 @@
 export function IntroPanel() {
   return (
-    <aside className="wall__intro" data-intro="" hidden>
+    <aside className="wall__intro" data-intro="" hidden aria-label="How to explore">
       <div className="wall__intro-card">
         <button type="button" className="wall__intro-x" data-intro-x="" aria-label="Close">
           <svg viewBox="0 0 20 20" aria-hidden="true">
-            <path d="M6 6l8 8M14 6l-8 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"></path>
+            <path d="M6 6l8 8M14 6l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
         </button>
-        <div className="wall__intro-about">
-          <p className="wall__intro-title">
-            <span data-count="">{"31,993"}</span>
-            {" colors, named by people."}
-          </p>
-          <p>
-            {
-              " Color Names is an open, community-grown collection of unique, human-authored color names. Free to use under the MIT license, available as an npm package or through the API. "
-            }
-          </p>
+        <div className="studio__intro-icon" aria-hidden="true">
+          ✳
         </div>
-        <details className="wall__intro-adopt">
-          <summary className="label wall__intro-stat" data-adopted-count="">
-            {"Support the list"}
-          </summary>
-          <p>
-            <b>{"Adopt a color to support my work."}</b>
-            {" Pick your favourite, open it and hit "}
-            <i>{"Adopt this color"}</i>
-            {": from $5, with your name on it for good. Each color can be adopted only once. "}
-          </p>
-        </details>
+        <div className="wall__intro-about">
+          <p className="wall__intro-title">Follow your curiosity.</p>
+          <p>Drag to turn the universe. Scroll to get closer. Click a color to make it yours.</p>
+        </div>
+        <span data-adopted-count="" hidden />
       </div>
       <div className="wall__intro-links">
-        <a className="wall__intro-cta" href="/adopt/">
-          {"Adopt a color"}
-        </a>
+        <span>YOUR NEXT IDEA STARTS HERE</span>
         <button type="button" data-intro-close="">
-          {"Got it"}
+          Got it <span aria-hidden="true">↗</span>
         </button>
       </div>
     </aside>

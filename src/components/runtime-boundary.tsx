@@ -21,15 +21,15 @@ export function RuntimeBoundary({ kind, children }: { kind: RuntimeKind; childre
     async function mount() {
       if (!element) return;
       if (kind === "explorer") {
-        const { initWall } = await import("@/vendor/color-names/wall.js");
+        const { initWall } = await import("@/vendor/color-engine/wall.js");
         if (scope.signal.aborted) return;
         const wall = element.querySelector<HTMLElement>("[data-wall]");
         if (wall) await initWall(wall, scope.signal);
       } else if (kind === "color") {
-        const { initDetailPage } = await import("@/vendor/color-names/detail.js");
+        const { initDetailPage } = await import("@/vendor/color-engine/detail.js");
         if (!scope.signal.aborted) initDetailPage(element, { signal: scope.signal });
       } else {
-        const { initNotFound } = await import("@/vendor/color-names/not-found.js");
+        const { initNotFound } = await import("@/vendor/color-engine/not-found.js");
         if (!scope.signal.aborted) await initNotFound();
       }
     }

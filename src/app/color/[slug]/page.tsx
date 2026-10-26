@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       color.description ??
       `Explore ${color.name} (${color.hex}), its neighbors, complements, color values, and art.`,
     alternates: { canonical: `/color/${color.slug}/` },
-    openGraph: { title: `${color.name} · ${color.hex}`, images: ["/og.jpg"] },
+    openGraph: { title: `${color.name} · ${color.hex}` },
   };
 }
 

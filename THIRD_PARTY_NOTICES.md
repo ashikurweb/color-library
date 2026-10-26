@@ -1,35 +1,44 @@
 # Third-party notices
 
-This project recreates [Color Names](https://names.color.pizza/) in Next.js and React.
+Ashikur Colors contains the following third-party materials. Original additions, application branding, local color-study generators, and card exports are Copyright (c) 2026 Ashikur Rahman under the root MIT license. That license does not replace the notices below.
 
-## Original site
+## Rendering engine and adapted design
 
-The rendering algorithms, shaders, interaction controllers, reference styles, logo, and adapted page markup originate from [meodai/names.color.pizza](https://github.com/meodai/names.color.pizza), by David Aerne / Elastiq GmbH. Its README and package manifest license the site under MIT.
+The rendering algorithms, shaders, interaction controllers, adapted stylesheet, and portions of page structure derive from [meodai/names.color.pizza](https://github.com/meodai/names.color.pizza), by David Aerne / Elastiq GmbH, distributed under MIT.
 
 - Source revision: `dceb095204304e5dcc49cb217dce1c076fdce28f`
-- Imported on: October 25, 2026
-- Adapted source: `src/vendor/color-names/`
-- Reference styles: `src/styles/reference.css`
-- React adaptations: shared components and feature components under `src/`
+- Imported: October 25, 2026
+- Adapted source: `src/vendor/color-engine/`, `src/styles/reference.css`, and relevant React markup under `src/`
+- Full retained copyright and permission notice: [licenses/color-engine.MIT.txt](licenses/color-engine.MIT.txt)
 
-The MIT copyright and permission notice is retained in [LICENSE](LICENSE).
+The original mascot, project branding, operator contact details, external checkout, fundraising claims, and supporter snapshot are not used in this version.
 
-## Color data
+## Color catalog and descriptions
 
-The 31,993 color names and curated selections originate from [meodai/color-names](https://github.com/meodai/color-names), licensed under MIT.
+The 31,993 color names and curated selections originate from [meodai/color-names](https://github.com/meodai/color-names), distributed under MIT.
 
 - Source revision: `c3f664acb027b2959fa9f74751e79d436c5363ee`
-- Published list version at import: `14.80.0`
-- Local snapshots: `public/data/`, `public/best-of.json`, and `public/added.json`
+- Dataset version: `14.80.0`
+- Local copies: `public/data/colors.json`, `public/best-of.json`, and derived collection downloads
+- Descriptions: the public catalog description snapshot imported on October 25, 2026
+- Copyright and permission notice: [licenses/color-engine.MIT.txt](licenses/color-engine.MIT.txt)
 
-Descriptions and supporter information reproduce the original site's public snapshot. They describe the original project and its patrons.
+## Typefaces
 
-## Font and artwork
+Inter is Copyright (c) 2016 The Inter Project Authors and is distributed under the SIL Open Font License. The complete notice is retained at `public/fonts/OFL.txt`.
 
-Inter is distributed under the SIL Open Font License. Its license is retained at `public/fonts/OFL.txt`. The variable Latin font is served locally.
+Instrument Serif is Copyright (c) 2022 The Instrument Serif Project Authors and is distributed under the SIL Open Font License. It is bundled locally through `@fontsource/instrument-serif`. The complete notice is retained at `licenses/instrument-serif.OFL.txt`.
 
-Pixel drawings and overview sprite sheets come from Color Names and are credited there to Retro Diffusion. The local sheets reproduce that overview; full-size drawings are requested through the media gateway.
+## Animation
 
-Artwork, photographs, album covers, and other images retain their original authors' rights and licenses. The gallery and its image dialog preserve the source links and credits. Access to the original site does not change those licenses.
+GSAP 3.15.0 and its Flip plugin are Copyright (c) 2008-2026 GreenSock and use the [GSAP Standard "no charge" license](https://gsap.com/standard-license), not the application's MIT license. The package's copyright headers are retained; see also `licenses/gsap.NOTICE.txt`.
 
-This recreation does not load the original site's Cloudflare analytics script. It does not impersonate a payment processor: the adoption flow links to the original Color Names service for checkout.
+## Pixel illustrations
+
+The included pixel atlas was obtained from Color Names and is credited there to Retro Diffusion. The atlas and derived pixel crops retain that provenance; they are not claimed as original artwork by Ashikur Rahman. No remote image service is used. The newly generated geometric color studies are separate original compositions.
+
+## Dependencies
+
+Installed dependencies retain their package licenses and copyright notices. These include Next.js, React, Tailwind CSS, Culori, color-description, dittotones, and Sharp. Build and test tooling also retains its own notices.
+
+The `/licenses/` endpoint serves these notices together with the complete retained engine MIT license, both font licenses, and the GSAP notice.

@@ -1,3 +1,5 @@
+import { SITE } from "@/lib/site";
+
 export function DetailFooter() {
   return (
     <footer className="slide footer" id="share" data-slide="">
@@ -5,13 +7,11 @@ export function DetailFooter() {
         {"Use it, share it."}
       </h2>
       <p className="lead footer__about">
-        {
-          " Color Names is an open list of names for colors, each one given by a person. Free to use, under the MIT license. "
-        }
+        {` Explore color with ${SITE.name}. Find a shade, build a palette, and bring it into your next project. `}
       </p>
       <p className="footer__adopt" data-footer-adopt="" hidden>
         <a href="/adopt/">
-          {"Adopt this color "}
+          {"Create a color card "}
           <svg className="hero__heart" viewBox="0 1 24 22" aria-hidden="true">
             <path
               className="hero__heart-edge"
@@ -22,7 +22,7 @@ export function DetailFooter() {
         </a>
       </p>
       <nav className="footer__nav" aria-label="Project links">
-        <a href="/">{"Color Names"}</a>
+        <a href="/">{SITE.name}</a>
         <a href="/supporters/">{"Supporters"}</a>
         <span className="footer__share">
           <a data-page-link="" href="/color/"></a>

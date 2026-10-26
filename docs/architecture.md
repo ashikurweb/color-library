@@ -1,43 +1,51 @@
 # Architecture
 
-## Routing and rendering
+## Rendering and ownership
 
-Next.js App Router owns page composition, metadata, route validation, and the data/media endpoints. The route files compose feature components instead of mixing page markup with rendering algorithms. Shared contracts live in `src/types/color.ts`.
+Next.js App Router owns routes, metadata, server data, and HTTP handlers. Feature components compose the explorer, color details, card designer, and legal pages. Shared contracts live in `src/types/color.ts`.
 
-The explorer and color-detail markup are React server components. `RuntimeBoundary` imports their browser runtime after hydration, preserving useful server-rendered content on direct color URLs. It does not import browser-only modules into the server data layer.
+The explorer and color-detail markup are React server components. `RuntimeBoundary` dynamically imports the browser engine after hydration. Its camera, shaders, and per-frame state stay within the engine rather than causing React renders on every frame.
 
-The explorer has tens of thousands of cards and custom GPU shaders. Its camera and animation state stay inside the attributed rendering engine rather than triggering React renders on every frame. The reference CSS preserves its original geometry, typography, motion, and responsive behavior. Tailwind supplies application and recovery UI styles alongside those styles.
+The original MIT copyright and permission notice for adapted code is retained in `licenses/color-engine.MIT.txt`, with provenance in `THIRD_PARTY_NOTICES.md`. The product brand and new application features belong to Ashikur Rahman.
 
-Tailwind's theme and utility layers are imported without Preflight. The reference design intentionally uses browser defaults for elements such as paragraphs; adding a reset would change its spacing.
+## DOM contract and lifecycle
 
-## The DOM contract
+The `data-*` attributes are the interface between React markup and the engine. React owns the surrounding shell, and the engine owns the mutable subtree. Rename attributes only alongside their controllers.
 
-The `data-*` attributes in explorer/detail components are an intentional adapter interface. The engine queries them to bind controls or update a color page. If an attribute is renamed or an element removed, update its controller at the same time.
+Native links preserve document transitions and view restoration. The explorer creates temporary detail overlays and manages browser history. `RuntimeScope` owns listeners, animation frames, timers, observers, workers, and WebGL contexts, then releases them on unmount. Dynamic imports check cancellation before initialization so React Strict Mode remains safe.
 
-Only one explorer or standalone detail runtime should own a document. The explorer can create its own transient detail overlay, as the original renderer does. React owns the surrounding shell; the runtime owns mutable content within that boundary. Keep React state out of a renderer-owned subtree unless the boundary is explicitly extended to support it.
+Tailwind's theme and utilities are imported without Preflight. The adapted stylesheet relies on browser defaults for paragraph spacing and other elements.
 
-Native links retain the source site's document-to-document card transitions and restoration behavior. The explorer's own animated overlay uses browser history. This is why the Next.js rule recommending `Link` is disabled with a documented reason; ordinary navigation still uses local Next.js routes.
+## Studio and motion
 
-## Resource lifetime
+The home shell lives under `features/explorer/`. Server components render the hero, controls, and orbital guides. `studio.css` scopes the new design to `.studio`, allowing color-detail overlays to retain their own color system.
 
-`RuntimeScope` explicitly tracks event listeners, animation frames, timers, observers, workers, and WebGL contexts. The adapted modules call these helpers directly; they do not monkey-patch browser APIs. The React boundary aborts and releases these resources on unmount. Dynamic imports check cancellation before initializing, including React Strict Mode's development remount.
+`lib/orbit-layout.ts` maps hue, saturation, and lightness into an original torus independently of catalog order. Filtering a collection preserves every remaining color's position. The existing instanced WebGL renderer draws all swatches in one call; distant swatches become softly lit round particles, while close cards retain their exact colors and labels. No second canvas or 3D framework is required.
 
-The adoption form is React state and uses a smaller scoped binding for its holographic card. Preview identity state remains local to the page.
+`features/explorer/motion.ts` owns a GSAP context with entrance timelines, Flip search relocation, magnetic controls, and pointer parallax. It measures the search's layout slot with a resize observer. The engine reads a small mutable stage object to offset the camera, keeping rendering and hit testing in the same coordinate space. Selecting or exploring a color centers the scene and makes the hidden introduction inert.
 
-## Data
+The runtime's abort signal disposes the GSAP context and its listeners and observers. Both GSAP and the camera observe reduced-motion preferences. The artistic Orbit has no inverse color-space mapping, so Voronoi switches to OKLab before building its worker data; switching back to Orbit exits cells.
 
-The server repository imports the pinned catalog and computes the original site's collision-aware slugs once. It rejects unknown slugs before contacting an upstream service. Six common colors are prerendered; other valid colors render and cache on demand.
+## Local content
 
-Editorial enrichment is a bounded request to the matching original page. Only its structured color data is extracted, and the returned name and hex must match the local record. A timeout or upstream error returns the local description and catalog record. The gallery retains its artwork source credits.
+The server repository indexes the local catalog by slug and hex. It computes stable collision-aware slugs once. Six named colors are prerendered; other known colors are generated and cached on demand. Unknown names never trigger a remote request.
 
-The media handler validates path segments and a fixed category allowlist. Its upstream origin is fixed. It localizes media URLs within JSON responses so images and WebGL textures work consistently under localhost and a deployed origin.
+The repository returns local descriptions, a same-origin generated gallery URL, and a same-origin pixel image URL. There is no upstream HTML parser, media proxy, or external checkout.
 
-The core catalog, fonts, and eight pixel overview sheets are local. Full-size media and extended encyclopedia content remain upstream dependencies. The source and snapshot revisions are recorded in `THIRD_PARTY_NOTICES.md`.
+The media route accepts only validated paths for color-study lists, bounded SVG variants, and known-color pixel tiles. SVG geometry is generated from validated hex values. Sharp crops pixel tiles from the included local atlas. Arbitrary URLs and path traversal are rejected.
 
-## Adding or changing features
+Gallery images are original geometric color studies, not museum photographs. The illustration atlas keeps its existing credits in the notices. Fonts and all downloadable color collections are local.
 
-- Put route orchestration and metadata under `app/`, behavior and UI under the relevant `features/` directory, and reusable contracts under `types/`.
-- Keep imports of `lib/server/` out of client components. Load large catalogs on demand rather than embedding them in every React page payload.
-- Preserve the shared slug rules so explorer links, color routes, adoptions, and gallery data refer to the same color.
-- Use the runtime helpers for any new imperative event or animation work. A new GPU resource needs an explicit owner and cleanup.
-- Extend browser coverage for a new user-visible interaction. The suite checks actual navigation and controls rather than snapshotting implementation details.
+## Identity and card creation
+
+`src/lib/site.ts` centralizes the displayed name, GitHub profile, and copyright owner. `src/lib/brand.ts` defines the shared geometric mark. The social preview is generated from those settings.
+
+The card designer uses React state, with a small scoped binding for its holographic preview. Canvas text rendering creates PNG downloads without interpreting the name as HTML or SVG. Object URLs are released after the download. Identity data is not persisted or submitted.
+
+`public/data/adopted.json` is an empty registry for this project. External supporters, amounts, and operator details are not imported. Adding paid adoption later requires a separately configured backend and accurate terms.
+
+## Changes and verification
+
+Keep route orchestration under `app/`, UI behavior under `features/`, and shared contracts under `types/`. Do not import server repositories into client components. Use lifecycle helpers for new imperative work. Run lint, TypeScript, unit tests, and the relevant browser tests after changing engine contracts.
+
+Browser tests exercise actual controls, image dialogs, file downloads, branding, and local-only network requests. License endpoints are checked independently of product branding.

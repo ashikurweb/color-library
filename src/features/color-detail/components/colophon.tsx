@@ -1,17 +1,23 @@
+import { SITE } from "@/lib/site";
+
 export function Colophon() {
   return (
     <footer className="colophon" data-colophon="">
-      <nav className="colophon__nav" aria-label="The list">
-        <a href="https://github.com/meodai/color-names">
-          {"GitHub"}
-          <span data-version=""></span>
+      <nav className="colophon__nav" aria-label="The atlas">
+        <a href="/">
+          {SITE.name}
+          <span data-version="" />
         </a>
-        <a href="https://www.npmjs.com/package/color-name-list">{"npm"}</a>
-        <a href="https://meodai.github.io/color-name-api/">{"API"}</a>
-        <a href="https://github.com/meodai/color-names/blob/main/LICENSE">{"License"}</a>
-        <a href="/legal/">{"Legal"}</a>
+        <a href={SITE.github} target="_blank" rel="noopener noreferrer">
+          GitHub
+        </a>
+        <a href="/data/colors.json" download>
+          Color data
+        </a>
+        <a href="/license/">License</a>
+        <a href="/legal/">Legal</a>
       </nav>
-      <p className="colophon__color" data-colophon-color=""></p>
+      <p className="colophon__color" data-colophon-color="" />
     </footer>
   );
 }

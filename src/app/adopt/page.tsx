@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { AdoptionExperience } from "@/features/adoption/components/adoption-experience";
 import { MoreProjects } from "@/features/adoption/components/more-projects";
-import { getAdoptions, getColorBySlug, getColors, getSlug } from "@/lib/server/color-repository";
+import { getColorBySlug, getColors, getSlug } from "@/lib/server/color-repository";
 
 export const metadata: Metadata = {
-  title: "Adopt a color",
-  description: "Be the one and only patron of a color. Keep Color Names and its API free for everyone.",
+  title: "Create a color card",
+  description: "Choose a shade, personalize a color card, and download it for free.",
 };
 
 export default async function AdoptPage({
@@ -21,7 +21,7 @@ export default async function AdoptPage({
         ? getColors().find((entry) => entry.name === params.name)
         : undefined) ?? getColorBySlug("bright-red")!;
   return (
-    <AdoptionExperience initialColor={color} initialSlug={getSlug(color.name)!} adoptions={getAdoptions()}>
+    <AdoptionExperience initialColor={color} initialSlug={getSlug(color.name)!}>
       <MoreProjects />
     </AdoptionExperience>
   );

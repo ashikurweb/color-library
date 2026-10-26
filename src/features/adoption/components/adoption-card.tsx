@@ -32,7 +32,7 @@ export function AdoptionCard({
       const dark = wcagLuminance(color.hex) < 0.5;
       card.style.setProperty("--c-shade0", shade(color.hex, dark ? 25 : -25));
       card.style.setProperty("--c-shade1", shade(color.hex, dark ? 12 : -12));
-      import("@/vendor/color-names/tilt.js").then(({ tiltCard }) => {
+      import("@/vendor/color-engine/tilt.js").then(({ tiltCard }) => {
         if (scope.signal.aborted) return;
         const tilt = tiltCard(card);
         tilt.holo(patron?.shine || "prism");
@@ -66,7 +66,7 @@ export function AdoptionCard({
         >
           <Avatar
             key={patron?.avatar || previewName}
-            src={patron?.avatar?.replace("https://media.color.pizza/", "/media/")}
+            src={patron?.avatar}
             name={patron?.by || previewName || ""}
             anonymous={patron?.on === "anonymous"}
           />

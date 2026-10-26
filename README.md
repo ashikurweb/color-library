@@ -1,8 +1,8 @@
-# Color Names
+# Ashikur Colors
 
-A faithful recreation of [names.color.pizza](https://names.color.pizza/), built with **Next.js 16.4.3**, **React 19.3.1**, **TypeScript**, and **Tailwind CSS 4.3.3**. These were the latest stable versions resolved from npm when this project was created.
+An interactive color atlas by **[Ashikur Rahman](https://github.com/ashikurweb)**. Explore 31,993 named colors, compare palettes, and create personalized color cards.
 
-The original MIT-licensed renderer is adapted behind a typed React lifecycle boundary. The app renders actual interactive color spaces; it does not embed the original website.
+Built with **Next.js 16.4.3**, **React 19.3.1**, **TypeScript**, **Tailwind CSS 4.3.3**, and **GSAP 3.15.0**.
 
 ## Run locally
 
@@ -13,88 +13,92 @@ npm ci
 npm run dev
 ```
 
-Open **http://localhost:3000**. If that port is busy, Next.js prints the port it selected.
+Open **http://localhost:3000**. For production:
 
 ```sh
 npm run build
 npm start
 ```
 
-For a deployment, copy `.env.example` to `.env.local` and set `NEXT_PUBLIC_SITE_URL` to the site's public origin. No API key is needed to explore colors.
+Set `NEXT_PUBLIC_SITE_URL` in `.env.local` to your deployed origin. No API key or external content service is required.
 
-## Included
+## Features
 
 - All **31,993** named colors, with exact-name, partial-name, and hex search.
-- Interactive RGB, OKLab, OKLCH, and HSL spaces; drag, zoom, touch, and keyboard navigation.
-- Swatches, Voronoi cells, and pixel-art views, plus a virtualized A–Z list.
-- Full, Best of, Short, and Adopted collections.
-- Animated color-page overlays, direct color URLs, browser history, and saved view state.
-- Canonical hex-to-name redirects, page metadata, and a sitemap covering every named color.
-- Color formats with copy actions, descriptions, mixing diagrams, related colors, complements, and ramps.
-- Artwork galleries, image dialogs, palettes, and original image credits.
-- Adoption previews with holographic cards, a color picker, identity validation, and already-adopted states.
-- The complete supporter snapshot, legal page, and custom color-themed 404.
-- Responsive desktop/mobile layouts, local fonts, local logo assets, and local overview sprite sheets.
+- An original 3D **Orbit** sculpture, plus RGB, OKLab, OKLCH, and HSL spaces, with drag, zoom, touch, and keyboard controls.
+- A dark studio home with editorial typography, softly lit particles, orbital guides, and mint accents.
+- GSAP entrance sequences, magnetic buttons, pointer parallax, and Flip transitions that move search above a selected color. Reduced-motion preferences are respected, including changes while the page is open.
+- Swatches, Voronoi cells, pixel illustrations, and a virtualized A–Z list.
+- Full, Best of, and Short collections with local JSON downloads.
+- Animated detail overlays, direct color URLs, history restoration, and canonical hex redirects.
+- Color formats, copy actions, descriptions, mixing diagrams, related colors, complements, and ramps.
+- A local gallery of original geometric color studies, palettes, and image dialogs.
+- Personalized card previews with holographic effects and **1080 × 1380 PNG downloads**.
+- A fresh supporter page, accurate privacy information, local licenses, and a custom 404.
+- Responsive layouts, locally bundled Inter and Instrument Serif fonts, a custom geometric brand mark, and generated social previews.
 
-## Code structure
+## Structure
 
 ```text
 src/
-  app/                    Next.js routes, metadata, error states, and HTTP handlers
-    color/[slug]/         Individual named-color pages
-    api/colors/[slug]/    Cached, validated color-page data
-    media/[...segments]/  Restricted gateway to the original media host
-  components/             Shared brand, swatch, avatar, and lifecycle boundary
-  features/
-    explorer/             Search, toolbar, introduction, and view controls
-    color-detail/         Hero, gallery, formats, related colors, and footer
-    adoption/             React form, catalog hook, card preview, and related projects
-    supporters/           Patron rows and project running costs
-    legal/                Legal page markup
-  lib/                    Typed color, identity, configuration, and lifecycle utilities
-    server/               Server-only catalog and editorial-data repository
-  types/                  Shared color and patron contracts
-  styles/                 Original design tokens and reference styles
-  vendor/color-names/     Attributed MIT rendering code and workers
+  app/                    Routes, metadata, image generation, and HTTP handlers
+    color/[slug]/         Named-color pages
+    api/colors/[slug]/    Local typed color-page data
+    media/[...segments]/  Local color studies and cropped pixel illustrations
+    license/              Project MIT license
+    licenses/             Complete third-party notices
+  components/             Shared brand, swatch, avatar, and runtime boundary
+  features/               Explorer, color details, card designer, supporters, and legal UI
+    explorer/motion.ts    Scoped GSAP timelines, Flip, and pointer interactions
+    explorer/studio.css   Responsive studio shell and interaction states
+  lib/                    Typed data, color utilities, brand configuration, and runtime scope
+    server/               Server-only catalog and local media generation
+  types/                  Shared color and supporter contracts
+  styles/                 Design tokens and adapted renderer styles
+  vendor/color-engine/    Licensed rendering engine, GPU shaders, and workers
 public/
-  data/                   Pinned color, description, and supporter snapshots
-  fonts/                  Local Inter variable font and its license
-  media/pixel-atlas/      All eight overview sprite sheets
-  logo/                   Original logo assets
+  data/                   Local colors, descriptions, collections, and empty supporter registry
+  fonts/                  Local Inter font and its license
+  media/pixel-atlas/      Local illustration atlas and index
+licenses/                 Retained licenses for included third-party work
 ```
 
-Read [docs/architecture.md](docs/architecture.md) before changing the renderer's DOM contract.
+See [docs/architecture.md](docs/architecture.md) for the React/runtime boundary. Production screenshots are in [docs/screenshots](docs/screenshots).
 
-Verified production previews: [desktop](docs/screenshots/desktop.png), [mobile](docs/screenshots/mobile.png), [color detail](docs/screenshots/color-detail.png), [adoption](docs/screenshots/adoption.png), and [supporters](docs/screenshots/supporters.png).
+## Branding
 
-## Data and service boundaries
+Edit `src/lib/site.ts` for the site name, copyright owner, GitHub profile, and version. The geometric symbol is defined in `src/lib/brand.ts` and used by the header and holographic cards. Keep `public/favicon.svg` in sync when changing it. The Open Graph image uses the same brand configuration.
 
-The catalog, curated lists, descriptions, supporter snapshot, fonts, and pixel-art overview load from this project. The initial collection contains 31,993 names, 136 adopted colors, and 113 patrons, captured on October 25, 2026.
+The package is `ashikur-colors`; the existing workspace directory is retained for convenience.
 
-Extended editorial material, full-size pixel drawings, and gallery images use the original public services. Editorial requests are cached and fall back to the local catalog when unavailable. `/media/` only forwards approved paths to `media.color.pizza`; it is not an arbitrary URL proxy.
+## Data, media, and privacy
 
-**Payments are not processed by this clone.** The adoption form previews an identity and hands off to the original Color Names adoption page. Checkout, ownership changes, refunds, certificate issuance, and live patron updates belong to that service. The identity is a local preview and is not submitted or persisted by this app. A separate authorized payment backend would be needed to make those operations native to a deployed copy.
+All application data and media are served from this project. Color-page data never scrapes another website. Color studies are deterministic SVG compositions generated from the selected shade. Pixel images are cropped from the included 16-pixel atlas tiles and scaled to 64 pixels, preserving their pixel appearance. They do not fetch separate high-resolution images.
 
-The graphics views need WebGL 2 and a current browser. Gallery media needs an internet connection. Local preferences are stored in browser storage; the original analytics script is omitted.
+The supporter registry starts empty. No third-party patrons, fundraising totals, payment links, or operator details are presented as this project's own. Card creation is a free local download: it does not charge money, reserve a color, or publish the entered identity. Names stay on the user's device. The app does not load analytics.
+
+Graphics views require WebGL 2 and a current browser. No payment provider is configured.
+
+Orbit is an artistic layout. Choosing Voronoi from Orbit automatically switches to OKLab, which has the inverse mapping required by the cell renderer. Choosing Orbit again restores the swatch view.
 
 ## Checks
 
 ```sh
 npm run check           # ESLint and strict TypeScript
-npm run format:check    # Formatting for first-party source
-npm test                # Catalog, slug, safe JSON, and identity contracts
-npm run test:e2e        # Browser tests; starts a separate dev server on port 3100
+npm run format:check    # First-party formatting
+npm test                # Catalog, slugs, safe JSON, and identity validation
+npm run test:e2e        # Browser suite; starts a server on port 3100
 ```
 
-Install the test browser once with `npx playwright install chromium`. To use an existing Chrome installation or server:
+Install Chromium with `npx playwright install chromium`, or use an existing Chrome installation:
 
 ```sh
 PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/google-chrome \
 E2E_BASE_URL=http://localhost:3000 npm run test:e2e
 ```
 
-The 19 browser tests check search, hex entry, model/list selection, A–Z navigation, pixel-art assets, Voronoi initialization, random selection, overlay history, mobile controls, direct color pages, copying, artwork dialogs, supporters, adoption validation, canonical redirects, and 404/API behavior. They fail on uncaught browser errors and retain traces and screenshots for failures. Four unit tests check every catalog slug, pasted hex input, safe embedded JSON, and identity validation.
+The browser suite covers search relocation, Orbit/Voronoi transitions, reduced motion, models, views, history, mobile controls, color details, local galleries, PNG downloads, owner branding, local-only requests, API validation, and retained licenses. Unit tests also check the full catalog's Orbit coordinates and the hue seam.
 
-## Attribution
+## License
 
-Original website and color list by **David Aerne / Elastiq GmbH and contributors**. Their MIT-licensed work and original visual assets are retained with attribution. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and [LICENSE](LICENSE).
+Original additions and branding: **Copyright © 2026 Ashikur Rahman**, under the [MIT license](LICENSE). Included third-party code, color data, fonts, and artwork retain their own notices. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and [licenses/color-engine.MIT.txt](licenses/color-engine.MIT.txt). The project license does not transfer authorship of those components.
