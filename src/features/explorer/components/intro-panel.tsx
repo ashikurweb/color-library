@@ -11,8 +11,11 @@ export function IntroPanel() {
           ✳
         </div>
         <div className="wall__intro-about">
-          <p className="wall__intro-title">Follow your curiosity.</p>
-          <p>Drag to turn the universe. Scroll to get closer. Click a color to make it yours.</p>
+          <p className="wall__intro-title">Make room for color.</p>
+          <p>
+            Drag the colors to rotate, scroll to zoom, or search for a shade. Switch color models to see the
+            same collection from a different perspective.
+          </p>
         </div>
         <span data-adopted-count="" hidden />
       </div>

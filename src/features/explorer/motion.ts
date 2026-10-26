@@ -1,5 +1,6 @@
 import { gsap } from "gsap";
 import { Flip } from "gsap/Flip";
+import { createAmbientMotion } from "./ambient-motion";
 
 gsap.registerPlugin(Flip);
 
@@ -14,10 +15,11 @@ const MODEL_COPY: Record<string, [string, string, string]> = {
 interface MotionOptions {
   signal: AbortSignal;
   requestRender: () => void;
+  camera: { yaw: number; pitch: number };
 }
 
-/** One GSAP context per mounted explorer. No global ticker or orphaned listeners. */
-export function createExplorerMotion(root: HTMLElement, { signal, requestRender }: MotionOptions) {
+/** Scoped hero motion and a shared camera offset for rendering and picking. */
+export function createExplorerMotion(root: HTMLElement, { signal, requestRender, camera }: MotionOptions) {
   const hero = root.querySelector<HTMLElement>("[data-studio-hero]")!;
   const search = root.querySelector<HTMLElement>("[data-find]")!;
   const slot = root.querySelector<HTMLElement>("[data-search-slot]")!;
@@ -26,17 +28,26 @@ export function createExplorerMotion(root: HTMLElement, { signal, requestRender 
   const preference = matchMedia("(prefers-reduced-motion: reduce)");
   root.dataset.motion = preference.matches ? "reduced" : "full";
   const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
-  const stage = { presence: 1, parallaxX: 0, parallaxY: 0 };
+  const stage = { presence: 1, parallaxX: 0, parallaxY: 0, centerX: 0, centerY: 0 };
+  const ambient = createAmbientMotion(root, camera, signal, requestRender);
   const context = gsap.context(() => {}, root);
   let entered = false;
   let engaged = false;
   let heroHidden = false;
   let currentModel = "";
+  let currentView = "colors";
+  let entrance: gsap.core.Timeline | undefined;
   let placement: gsap.core.Timeline | undefined;
 
   function alignSearch() {
     // Measure the untransformed flow slot: text and locally loaded fonts can resize it.
     root.style.setProperty("--search-top", `${hero.offsetTop + slot.offsetTop}px`);
+    root.style.setProperty("--search-left", `${hero.offsetLeft + slot.offsetLeft}px`);
+    root.style.setProperty("--search-width", `${slot.offsetWidth}px`);
+    root.style.setProperty("--hero-height", `${hero.offsetHeight}px`);
+    stage.centerX = decoration.offsetLeft + decoration.offsetWidth / 2 - root.clientWidth / 2;
+    stage.centerY = decoration.offsetTop + decoration.offsetHeight / 2 - root.clientHeight / 2;
+    requestRender();
   }
   const resize = new ResizeObserver(alignSearch);
   resize.observe(hero);
@@ -78,10 +89,11 @@ export function createExplorerMotion(root: HTMLElement, { signal, requestRender 
         ease: "power3.inOut",
         prune: true,
       });
+      decoration.inert = on;
       gsap.to(decoration, {
         autoAlpha: on ? 0 : 1,
-        duration: preference.matches ? 0 : 0.55,
-        overwrite: "auto",
+        duration: preference.matches ? 0 : 0.45,
+        overwrite: true,
       });
       gsap.to(stage, {
         presence: on ? 0 : 1,
@@ -93,8 +105,16 @@ export function createExplorerMotion(root: HTMLElement, { signal, requestRender 
     });
   }
 
-  const observeState = () =>
-    setEngaged(root.classList.contains("is-away") || root.classList.contains("is-az"));
+  const observeState = () => {
+    const on =
+      root.classList.contains("is-away") ||
+      root.classList.contains("is-az") ||
+      (currentModel !== "" && currentModel !== "orbit") ||
+      currentView !== "colors";
+    if ((on || menu.getAttribute("aria-expanded") === "true") && entrance && entrance.progress() < 1)
+      entrance.progress(1);
+    setEngaged(on);
+  };
   const stateObserver = new MutationObserver(observeState);
   stateObserver.observe(root, { attributes: true, attributeFilter: ["class"] });
   stateObserver.observe(menu, { attributes: true, attributeFilter: ["aria-expanded"] });
@@ -160,40 +180,42 @@ export function createExplorerMotion(root: HTMLElement, { signal, requestRender 
     observeState();
     if (preference.matches) return;
     context.add(() => {
-      gsap
-        .timeline({ defaults: { ease: "power3.out" } })
+      entrance = gsap
+        .timeline({ defaults: { ease: "power4.out" } })
         .fromTo(
-          ".wall__brand, .wall__nav, .studio__header-label",
+          root.clientWidth > 896 ? ".wall__brand, .wall__nav" : ".wall__brand, .wall__burger",
           { opacity: 0, y: -12 },
           { opacity: 1, y: 0, duration: 0.8, stagger: 0.07, clearProps: "all" },
           0,
         )
-        .from("[data-title-line]", { yPercent: 115, rotation: 3, duration: 1.15, stagger: 0.12 }, 0.1)
-        .from("[data-reveal]", { opacity: 0, y: 18, duration: 0.85, stagger: 0.1 }, 0.3)
+        .fromTo(
+          "[data-title-line]",
+          { yPercent: 105, opacity: 0 },
+          {
+            yPercent: 0,
+            opacity: 1,
+            duration: 1,
+            stagger: 0.1,
+            ease: "power4.out",
+            clearProps: "transform,opacity",
+          },
+          0.1,
+        )
+        .from("[data-reveal]", { opacity: 0, y: 24, duration: 1, stagger: 0.12 }, 0.45)
         .from(search, { opacity: 0, duration: 0.8 }, 0.65)
         .fromTo(
-          ".wall__dock, .studio__gestures, .studio__edition",
+          ".studio__edition",
           { opacity: 0, y: 14 },
           { opacity: 1, y: 0, duration: 0.8, stagger: 0.08, clearProps: "all" },
           0.5,
         );
-      gsap.fromTo(
-        ".studio__orbits",
-        { rotation: -9, scale: 0.92, opacity: 0 },
-        {
-          rotation: 0,
-          scale: 1,
-          opacity: 1,
-          duration: 1.8,
-          ease: "power2.out",
-        },
-      );
     });
   }
 
   function setModel(key: string) {
     if (currentModel === key) return;
     currentModel = key;
+    observeState();
     root.dataset.studioModel = key;
     const copy = MODEL_COPY[key] ?? MODEL_COPY.orbit;
     const fields = ["[data-model-index]", "[data-model-label]", "[data-model-note]"];
@@ -240,6 +262,9 @@ export function createExplorerMotion(root: HTMLElement, { signal, requestRender 
       hero.removeAttribute("aria-hidden");
       root.classList.remove("is-engaged");
       root.style.removeProperty("--search-top");
+      root.style.removeProperty("--search-left");
+      root.style.removeProperty("--search-width");
+      root.style.removeProperty("--hero-height");
       delete root.dataset.motionReady;
       delete root.dataset.motion;
       delete root.dataset.studioModel;
@@ -247,5 +272,14 @@ export function createExplorerMotion(root: HTMLElement, { signal, requestRender 
     { once: true },
   );
 
-  return { stage, enter, setModel };
+  return {
+    stage,
+    ambient,
+    enter,
+    setModel,
+    setView(view: string) {
+      currentView = view;
+      observeState();
+    },
+  };
 }

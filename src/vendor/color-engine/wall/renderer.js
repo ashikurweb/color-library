@@ -85,8 +85,7 @@ void main() {
     float h = fract(sin(float(gl_InstanceID) * 12.9898) * 43758.5453);
     float light = dot(a_color, vec3(0.2126, 0.7152, 0.0722));
     float t = clamp((u_bang - (1.0 - light) * 0.4 - h * 0.08) / 0.52, 0.0, 1.0);
-    float c1 = 2.4, c3 = c1 + 1.0, u = t - 1.0;
-    float out_ = 1.0 + c3 * u * u * u + c1 * u * u; // easeOutBack
+    float out_ = 1.0 - pow(1.0 - t, 4.0);
     pos = mix(u_bangCenter, pos, out_);
     born = smoothstep(0.0, 0.45, t);
     keep *= born;
@@ -174,15 +173,20 @@ void main() {
   // far cards are solid color, so the space reads as a cloud
   vec3 paper = mix(v_color, vec3(1.0), smoothstep(10.0, 34.0, v_cardpx));
   vec3 c = v_local.y < u_size.x ? v_color : paper;
+  float alpha = 1.0;
   // Distant swatches read as softly lit beads. At card distance their exact
   // unshaded color returns; pixel art and the readable name strip stay intact.
   if (u_pixel < 0.001 && v_strip < 0.01 && v_cardpx < 24.0) {
     vec2 bead = (v_local / u_size.x - 0.5) * 2.0;
     float roundness = 1.0 - smoothstep(12.0, 24.0, v_cardpx);
     float edge = mix(max(abs(bead.x), abs(bead.y)), length(bead), roundness);
-    if (edge > 1.0) discard;
-    float highlight = exp(-dot(bead + vec2(0.3, 0.35), bead + vec2(0.3, 0.35)) * 6.0);
-    c = mix(c, c * (0.8 + 0.2 * sqrt(max(0.0, 1.0 - edge * edge))) + vec3(highlight * 0.14), roundness);
+    float aa = clamp(fwidth(edge) * 0.5, 0.02, 0.22);
+    alpha = 1.0 - smoothstep(1.0 - aa, 1.0, edge);
+    if (alpha < 0.01) discard;
+    vec3 normal = normalize(vec3(bead.x, -bead.y, sqrt(max(0.0, 1.0 - dot(bead, bead)))));
+    float light = max(dot(normal, normalize(vec3(-0.35, 0.55, 1.0))), 0.0);
+    float highlight = pow(light, 18.0) * 0.045;
+    c = mix(c, c * (0.72 + 0.28 * light) + vec3(highlight), roundness);
   }
   // its pixel art over the color, where there is any and its sheet has come
   // its pixel art instead of the color, once its sheet has come: the color goes, and only
@@ -223,7 +227,7 @@ void main() {
     vec3 light = mix(v_color / max(max(v_color.r, v_color.g), max(v_color.b, 0.001)), vec3(1.0), 0.6);
     c = mix(c, light, clamp(v_star * (0.35 + glint), 0.0, 1.0));
   }
-  o = vec4(mix(c, vec3(0.035, 0.043, 0.047), v_fog), 1.0);
+  o = vec4(mix(c, vec3(0.039, 0.051, 0.071), v_fog), alpha);
 }`;
 
 function compile(gl, type, src) {
@@ -385,7 +389,10 @@ export function createRenderer(canvas, positions, colors, grow = new Uint8Array(
     gl.activeTexture(gl.TEXTURE3);
     gl.bindTexture(gl.TEXTURE_2D, blank);
     gl.activeTexture(gl.TEXTURE0);
+    gl.enable(gl.BLEND);
+    gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, count);
+    gl.disable(gl.BLEND);
   };
   draw.bang = (t, center) => {
     gl.useProgram(prog);

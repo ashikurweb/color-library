@@ -43,7 +43,7 @@ test("switches all color models and persists the model in the URL", async ({ pag
 test("the studio moves search out of the way and restores the introduction at home", async ({ page }) => {
   await openExplorer(page);
   const wall = page.locator("[data-wall]");
-  const title = page.getByRole("heading", { name: "A universe of color." });
+  const title = page.getByRole("heading", { name: "Color, in motion." });
   await expect(page.locator('[data-model="orbit"]')).toHaveAttribute("aria-pressed", "true");
   await expect(title).toBeVisible();
   await expect(page.locator("[data-model-label]")).toHaveText("The color orbit");
@@ -85,7 +85,7 @@ test("reduced motion keeps the studio and color selection usable", async ({ page
   await openExplorer(page);
   const wall = page.locator("[data-wall]");
   await expect(wall).toHaveAttribute("data-motion", "reduced");
-  await expect(page.getByRole("heading", { name: "A universe of color." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Color, in motion." })).toBeVisible();
   await page.getByRole("button", { name: "Surprise me" }).click();
   await expect(page.getByRole("searchbox")).not.toHaveValue("");
   await expect(wall).toHaveAttribute("aria-busy", "false");
@@ -95,7 +95,7 @@ test("reduced motion keeps the studio and color selection usable", async ({ page
   await expect(wall).toHaveAttribute("data-motion", "full");
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect(wall).toHaveAttribute("data-motion", "reduced");
-  await page.getByRole("button", { name: "Browse all colors" }).click();
+  await page.locator("[data-az]").click();
   await expect(page.locator(".az__row").first()).toBeVisible();
 });
 
@@ -188,6 +188,13 @@ test("keeps search and navigation usable on a narrow screen", async ({ page }) =
   await page.locator('[data-model="oklab"]').click();
   await expect(page.locator('[data-model="oklab"]')).toHaveAttribute("aria-pressed", "true");
   await expect(page.locator("[data-menu]")).toHaveAttribute("aria-expanded", "false");
+  await expect(page.locator("[data-studio-hero]")).toHaveAttribute("inert", "");
+  await page.locator("[data-menu]").click();
+  const models = (await page.locator("[data-models]").boundingBox())!;
+  expect(models.x).toBeGreaterThanOrEqual(0);
+  expect(models.x + models.width).toBeLessThanOrEqual(390);
+  await expect(page.locator(".wall__brand span")).toBeVisible();
+  await page.locator('[data-model="orbit"]').click();
   await expect(page.locator("[data-studio-hero]")).not.toHaveAttribute("inert", "");
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
   expect(overflow).toBe(false);

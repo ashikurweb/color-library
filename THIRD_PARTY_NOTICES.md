@@ -27,8 +27,6 @@ The 31,993 color names and curated selections originate from [meodai/color-names
 
 Inter is Copyright (c) 2016 The Inter Project Authors and is distributed under the SIL Open Font License. The complete notice is retained at `public/fonts/OFL.txt`.
 
-Instrument Serif is Copyright (c) 2022 The Instrument Serif Project Authors and is distributed under the SIL Open Font License. It is bundled locally through `@fontsource/instrument-serif`. The complete notice is retained at `licenses/instrument-serif.OFL.txt`.
-
 ## Animation
 
 GSAP 3.15.0 and its Flip plugin are Copyright (c) 2008-2026 GreenSock and use the [GSAP Standard "no charge" license](https://gsap.com/standard-license), not the application's MIT license. The package's copyright headers are retained; see also `licenses/gsap.NOTICE.txt`.
@@ -41,4 +39,4 @@ The included pixel atlas was obtained from Color Names and is credited there to 
 
 Installed dependencies retain their package licenses and copyright notices. These include Next.js, React, Tailwind CSS, Culori, color-description, dittotones, and Sharp. Build and test tooling also retains its own notices.
 
-The `/licenses/` endpoint serves these notices together with the complete retained engine MIT license, both font licenses, and the GSAP notice.
+The `/licenses/` endpoint serves these notices together with the complete retained engine MIT license, the Inter font license, and the GSAP notice.

@@ -22,7 +22,6 @@
     "check": "npm run lint && npm run typecheck"
   },
   "dependencies": {
-    "@fontsource/instrument-serif": "^5.3.0",
     "color-description": "^0.23.0",
     "culori": "^4.0.2",
     "dittotones": "^0.13.0",

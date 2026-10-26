@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { SITE, siteOrigin } from "@/lib/site";
 import "./globals.css";
-import "@fontsource/instrument-serif/latin-400-italic.css";
 import "@/features/explorer/studio.css";
 
 export const metadata: Metadata = {
@@ -18,7 +17,7 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
 };
 
-export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#090b0c" };
+export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#0a0d12" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

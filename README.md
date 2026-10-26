@@ -2,7 +2,7 @@
 
 An interactive color atlas by **[Ashikur Rahman](https://github.com/ashikurweb)**. Explore 31,993 named colors, compare palettes, and create personalized color cards.
 
-Built with **Next.js 16.4.3**, **React 19.3.1**, **TypeScript**, **Tailwind CSS 4.3.3**, and **GSAP 3.15.0**.
+Built with **Next.js 16.4.3**, **React 19.3.1**, **TypeScript**, **Tailwind CSS 4.3.3**, **GSAP 3.15.0**, and instanced **WebGL 2**.
 
 ## Run locally
 
@@ -25,9 +25,10 @@ Set `NEXT_PUBLIC_SITE_URL` in `.env.local` to your deployed origin. No API key o
 ## Features
 
 - All **31,993** named colors, with exact-name, partial-name, and hex search.
-- An original 3D **Orbit** sculpture, plus RGB, OKLab, OKLCH, and HSL spaces, with drag, zoom, touch, and keyboard controls.
-- A dark studio home with editorial typography, softly lit particles, orbital guides, and mint accents.
-- GSAP entrance sequences, magnetic buttons, pointer parallax, and Flip transitions that move search above a selected color. Reduced-motion preferences are respected, including changes while the page is open.
+- The actual **31,993-color 3D space opens directly on home**, beside the headline on desktop and above it on mobile. Drag, zoom, search, or switch models immediately.
+- The original artistic **Orbit** layout plus RGB, OKLab, OKLCH, and HSL. Distant swatches have soft edges and directional lighting; close swatches retain their exact colors and readable labels.
+- GSAP drives a continuous, gentle camera rotation, with pause/resume and a smooth handoff to dragging. The current angle is preserved when rotation stops. Reduced-motion preferences and hidden tabs pause automatic motion.
+- GSAP line reveals, a gradual color-space entrance, animated model changes, and Flip transitions that move search out of the way. Home restores the introduction and the live color space.
 - Swatches, Voronoi cells, pixel illustrations, and a virtualized A–Z list.
 - Full, Best of, and Short collections with local JSON downloads.
 - Animated detail overlays, direct color URLs, history restoration, and canonical hex redirects.
@@ -35,7 +36,7 @@ Set `NEXT_PUBLIC_SITE_URL` in `.env.local` to your deployed origin. No API key o
 - A local gallery of original geometric color studies, palettes, and image dialogs.
 - Personalized card previews with holographic effects and **1080 × 1380 PNG downloads**.
 - A fresh supporter page, accurate privacy information, local licenses, and a custom 404.
-- Responsive layouts, locally bundled Inter and Instrument Serif fonts, a custom geometric brand mark, and generated social previews.
+- Responsive layouts, locally bundled Inter, a custom geometric brand mark, and generated social previews.
 
 ## Structure
 
@@ -50,7 +51,10 @@ src/
   components/             Shared brand, swatch, avatar, and runtime boundary
   features/               Explorer, color details, card designer, supporters, and legal UI
     explorer/motion.ts    Scoped GSAP timelines, Flip, and pointer interactions
+    explorer/ambient-motion.ts  Scoped GSAP rotation of the existing color camera
+    explorer/color-space.css   Hero typography and responsive color-space layout
     explorer/studio.css   Responsive studio shell and interaction states
+    explorer/studio-controls.css  Search and color-explorer control styles
   lib/                    Typed data, color utilities, brand configuration, and runtime scope
     server/               Server-only catalog and local media generation
   types/                  Shared color and supporter contracts
@@ -97,7 +101,7 @@ PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/google-chrome \
 E2E_BASE_URL=http://localhost:3000 npm run test:e2e
 ```
 
-The browser suite covers search relocation, Orbit/Voronoi transitions, reduced motion, models, views, history, mobile controls, color details, local galleries, PNG downloads, owner branding, local-only requests, API validation, and retained licenses. Unit tests also check the full catalog's Orbit coordinates and the hue seam.
+The browser suite covers direct color-space rendering, model changes, drag interaction, actual rotation pause/resume, mobile spacing, home restoration, search relocation, Orbit/Voronoi transitions, reduced motion, models, views, history, mobile controls, color details, local galleries, PNG downloads, owner branding, local-only requests, API validation, and retained licenses. Unit tests also check the full catalog's Orbit coordinates and the hue seam.
 
 ## License
 

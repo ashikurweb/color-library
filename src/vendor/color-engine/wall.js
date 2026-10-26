@@ -39,7 +39,7 @@ const MIN_DIST = 2.5;
 const MAX_DIST = 860;
 // world units flown per unit of log zoom, once past MIN_DIST
 const THROUGH = 18;
-const DAMPING = 0.1; // share of the remaining motion per frame (OrbitControls: 0.05)
+const DAMPING = 0.14; // share of the remaining motion per frame (OrbitControls: 0.05)
 const MORPH_MS = 1400;
 const BANG_MS = 2200;
 const LIST_SHIFT_MS = 600;
@@ -205,7 +205,7 @@ export async function initWall(root, signal) {
   let model = asked.model;
   const startView = asked.view;
   if (!MODELS[model]) model = DEFAULT_MODEL;
-  // Voronoi needs an invertible color space; the artistic orbit is a sculpture.
+  // Voronoi needs an invertible color space; the artistic orbit has no inverse.
   if (startView === "cells" && !(model in MODEL_IDS)) model = "oklab";
   let positions = placeAll(model).slice();
   const posOf = (i) => [positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]];
@@ -370,9 +370,9 @@ export async function initWall(root, signal) {
     cam.up = cross(cam.right, cam.fwd);
     cam.fpx = view.h / 2 / Math.tan(FOV / 2); // in CSS px
     // Offset the whole camera, keeping projection and picking in the same space.
-    // The sculpture shares the desktop with the introduction; a chosen card centers.
-    const offsetX = sideBySide() ? view.w * 0.17 : 0;
-    const offsetY = sideBySide() ? 0 : view.h * 0.1;
+    // The live collection fits beside the introduction; a chosen color centers.
+    const offsetX = motion?.stage.centerX ?? 0;
+    const offsetY = motion?.stage.centerY ?? 0;
     cam.eye = add(cam.eye, scale(cam.right, (-offsetX * cam.dist * presence) / cam.fpx));
     cam.eye = add(cam.eye, scale(cam.up, (offsetY * cam.dist * presence) / cam.fpx));
   }
@@ -598,12 +598,15 @@ export async function initWall(root, signal) {
 
   let queued = false;
   const request = () => {
-    if (!queued) {
+    if (!queued && !document.hidden && !signal?.aborted) {
       queued = true;
       runtimeFrame(frame);
     }
   };
-  motion = createExplorerMotion(root, { signal, requestRender: request });
+  motion = createExplorerMotion(root, { signal, requestRender: request, camera: cam });
+  listen(document, "visibilitychange", () => {
+    if (!document.hidden) { lastTime = 0; request(); }
+  });
 
   let anim = null;
   let morph = null;
@@ -685,7 +688,7 @@ export async function initWall(root, signal) {
   const moving = () =>
     Math.abs(delta.yaw) + Math.abs(delta.pitch) + Math.abs(delta.zoom) > 1e-5 || Math.hypot(...delta.pan) > 1e-4;
   const stopMoving = () => Object.assign(delta, { yaw: 0, pitch: 0, pan: [0, 0, 0], zoom: 0 });
-  let idle = !reduceMotion;
+  let idle = false;
   let lastTime = 0;
   let marked = -1;
   // a found card: drawn in front until the camera moves
@@ -694,7 +697,7 @@ export async function initWall(root, signal) {
 
   function frame(time) {
     queued = false;
-    if (reduceMotion) idle = false;
+    if (document.hidden || signal?.aborted) return;
     const dt = lastTime ? Math.min(48, time - lastTime) : 16;
     lastTime = time;
     pixelArt.lookForDetail(time);
@@ -760,11 +763,6 @@ export async function initWall(root, signal) {
       delta.pan = scale(delta.pan, 1 - f);
       delta.zoom *= 1 - f;
       if (!moving()) stopMoving();
-    } else if (idle) {
-      if (model === "orbit") {
-        cam.yaw = -0.22 + Math.sin(time * 0.00016) * 0.16;
-        cam.pitch = 0.24 + Math.sin(time * 0.00012) * 0.08;
-      } else cam.yaw += 0.000018 * dt;
     }
 
     if (morph) {
@@ -855,7 +853,6 @@ export async function initWall(root, signal) {
       time < pixelArt.fadingUntil ||
       anim ||
       moving() ||
-      idle ||
       morph ||
       // a page open over the wall hides it whole; a found card is still once it's in
       (opening && !page.isOpen()) ||
@@ -878,6 +875,11 @@ export async function initWall(root, signal) {
 
   const stopIdle = () => {
     idle = false;
+    motion?.ambient.stop();
+  };
+  const startIdle = () => {
+    idle = true;
+    motion?.ambient.start();
   };
 
   const pool = [];
@@ -1613,7 +1615,7 @@ export async function initWall(root, signal) {
     if (busy) return;
     stopWalking();
     flyTo(home(), 1000, () => {
-      idle = !reduceMotion;
+      startIdle();
       request();
     });
   };
@@ -1791,6 +1793,7 @@ export async function initWall(root, signal) {
   function showMode() {
     showView();
     views.show();
+    motion?.setView(modeNow());
   }
   showMode();
 
@@ -2001,7 +2004,7 @@ export async function initWall(root, signal) {
     } else {
       morph = { from: positions.slice(), to, start: performance.now() };
     }
-    if (!busy) flyTo(home(), MORPH_MS);
+    if (!busy) flyTo(home(), MORPH_MS, startIdle);
     showModel();
     writeAddress({ model: key });
     request();
@@ -2178,7 +2181,7 @@ export async function initWall(root, signal) {
     Object.assign(cam, restored);
     setAway(!wasHome);
     if (startView === "cells") setView("cells");
-    idle = false;
+    stopIdle();
     // back from a color's page: flown to that color, the one it ended on; under the list the
     // space has no card to show, only its label would linger over the names
     if (start && !azList.on() && returning) focusCard(nearest(start));
@@ -2193,7 +2196,7 @@ export async function initWall(root, signal) {
     const startCells = startView === "cells";
     const then = () => {
       if (start && !azList.on()) focusCard(nearest(start));
-      else idle = !reduceMotion;
+      else startIdle();
       if (startCells) setView("cells");
     };
     // under the list there's no space to fly into

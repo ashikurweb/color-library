@@ -18,13 +18,15 @@ Tailwind's theme and utilities are imported without Preflight. The adapted style
 
 ## Studio and motion
 
-The home shell lives under `features/explorer/`. Server components render the hero, controls, and orbital guides. `studio.css` scopes the new design to `.studio`, allowing color-detail overlays to retain their own color system.
+The home shell lives under `features/explorer/`. Server components render the hero and controls around the existing instanced WebGL color canvas. The collection is interactive immediately on home. `studio.css` scopes the shell to `.studio`; `color-space.css` reserves space beside the headline on desktop and above it on mobile. `studio-controls.css` styles search and the model/view controls. Color-detail overlays retain their own color system.
 
-`lib/orbit-layout.ts` maps hue, saturation, and lightness into an original torus independently of catalog order. Filtering a collection preserves every remaining color's position. The existing instanced WebGL renderer draws all swatches in one call; distant swatches become softly lit round particles, while close cards retain their exact colors and labels. No second canvas or 3D framework is required.
+`lib/orbit-layout.ts` maps hue, saturation, and lightness into the original torus independently of catalog order. Filtering a collection preserves every remaining color's position. The color engine draws all swatches in one call. Distant swatches have antialiased edges and directional lighting; close swatches retain their exact colors and labels. Pixel art uses its existing texture path.
 
-`features/explorer/motion.ts` owns a GSAP context with entrance timelines, Flip search relocation, magnetic controls, and pointer parallax. It measures the search's layout slot with a resize observer. The engine reads a small mutable stage object to offset the camera, keeping rendering and hit testing in the same coordinate space. Selecting or exploring a color centers the scene and makes the hidden introduction inert.
+`features/explorer/ambient-motion.ts` drives the existing camera through a continuous 32-second GSAP cycle. Each cycle begins from the current camera angle. Stopping rotation preserves that angle, so dragging takes control without a jump. The pause control, reduced-motion preference, and page visibility suspend the loop. GSAP requests frames from the engine's existing scheduler; it does not create a second renderer or animation-frame loop.
 
-The runtime's abort signal disposes the GSAP context and its listeners and observers. Both GSAP and the camera observe reduced-motion preferences. The artistic Orbit has no inverse color-space mapping, so Voronoi switches to OKLab before building its worker data; switching back to Orbit exits cells.
+`features/explorer/motion.ts` owns line entrance timelines, Flip search relocation, and pointer interactions. A resize observer measures the hero, search slot, and scene center. The engine applies that offset to the camera used by both rendering and picking. Dragging, zooming, or selecting a color centers the view and makes the hidden introduction inert. Scientific models use the centered view; returning to Orbit restores the introduction.
+
+The desktop model and view controls are available on home. The mobile menu provides the same controls; the search suggestions open upward to stay in the viewport. Each GSAP context, listener, observer, and GPU resource follows the runtime abort signal. Hidden tabs stop scheduling color frames. The artistic Orbit has no inverse color-space mapping, so Voronoi switches to OKLab before building its worker data; switching back to Orbit exits cells.
 
 ## Local content
 

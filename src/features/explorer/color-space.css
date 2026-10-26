@@ -1,0 +1,392 @@
+/* Typography and space for the live color collection, in the same interactive canvas. */
+.studio.wall {
+  --hero-top: clamp(10rem, 22svh, 14rem);
+  --headline-size: clamp(4.75rem, 7vw, 7rem);
+}
+.studio__hero {
+  position: absolute;
+  z-index: 3;
+  top: var(--hero-top);
+  left: var(--studio-gutter);
+  width: 47%;
+  max-width: 39rem;
+  text-align: left;
+}
+.studio__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0 0 1.75rem;
+  color: #8c9dad;
+  font-size: 0.58rem;
+  font-weight: 450;
+  letter-spacing: 0.12em;
+}
+.studio__eyebrow-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #bfdfff;
+  box-shadow: 0 0 12px rgb(148 211 250 / 30%);
+}
+.studio__title {
+  margin: 0 0 1.7rem -0.055em;
+  font-size: var(--headline-size);
+  font-weight: 460;
+  line-height: 0.99;
+  letter-spacing: -0.065em;
+  color: #f3f6f8;
+}
+.studio__title-line {
+  display: block;
+  overflow: clip;
+  padding: 0.04em 0.06em 0.15em;
+  margin: -0.04em -0.06em -0.15em;
+}
+.studio__title-line > span {
+  display: inline-block;
+}
+.studio__title-line--light {
+  color: #c3d9e9;
+}
+.studio__description {
+  margin: 0;
+  color: #8a99a8;
+  font-size: 0.88rem;
+  font-weight: 390;
+  line-height: 1.8;
+  letter-spacing: -0.01em;
+}
+.studio__description [data-count] {
+  color: #c5d5e2;
+  font-variant-numeric: tabular-nums;
+}
+.studio__search-slot {
+  width: min(24rem, 100%);
+  height: 3.5rem;
+  margin-top: 1.8rem;
+}
+.studio:not(.is-engaged) .wall__find {
+  left: var(--search-left, var(--studio-gutter));
+  top: var(--search-top);
+  width: var(--search-width, 24rem);
+}
+.studio__actions {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  margin-top: 1rem;
+}
+.studio__actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  min-height: 2.9rem;
+  padding: 0.7rem 1.2rem;
+  border: 0;
+  border-radius: 9px;
+  color: #0c1720;
+  background: #c4e8f7;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 530;
+  cursor: pointer;
+  transition:
+    background 0.25s,
+    transform 0.25s;
+}
+.studio__actions .studio__discover {
+  gap: 0.7rem;
+  padding-inline: 0;
+  color: #96a5b5;
+  background: none;
+  font-weight: 400;
+}
+.studio__actions .studio__discover:hover {
+  color: #d4e7f4;
+}
+.studio__actions button > span {
+  font-size: 1rem;
+}
+
+.studio__stage {
+  position: absolute;
+  z-index: 2;
+  top: 6.5rem;
+  right: 0;
+  bottom: 8.5rem;
+  width: 56%;
+  max-width: 58rem;
+  pointer-events: none;
+}
+.studio__scene-aura {
+  position: absolute;
+  inset: 12% 5% 5%;
+  background:
+    radial-gradient(ellipse at 40% 55%, rgb(42 87 138 / 13%), transparent 67%),
+    radial-gradient(ellipse at 70% 45%, rgb(128 81 146 / 9%), transparent 61%);
+  mask-image: radial-gradient(ellipse at center, #000 25%, transparent 72%);
+  pointer-events: none;
+}
+.studio__pause {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: #91a3b3;
+  background: none;
+  cursor: pointer;
+}
+.studio__pause:hover {
+  color: #dbe9f5;
+  background: rgb(25 39 55 / 55%);
+}
+.studio__pause svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+}
+.studio__play-triangle,
+.studio__pause[aria-pressed="true"] .studio__pause-bars {
+  display: none;
+}
+.studio__pause[aria-pressed="true"] .studio__play-triangle {
+  display: block;
+}
+.studio__scene-caption {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  white-space: nowrap;
+  color: #8293a3;
+  font-size: 0.66rem;
+  pointer-events: none;
+}
+.studio__scene-caption .studio__pause {
+  pointer-events: auto;
+  margin-left: 0.25rem;
+}
+.studio__live-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #b9daea;
+}
+.studio__caption-divider {
+  height: 11px;
+  width: 1px;
+  background: rgb(193 215 235 / 20%);
+  margin-inline: 0.15rem;
+}
+.studio__edition {
+  position: absolute;
+  left: var(--studio-gutter);
+  bottom: 2.6rem;
+  z-index: 2;
+  color: #627585;
+  font-size: 0.58rem;
+  letter-spacing: 0.11em;
+  pointer-events: none;
+}
+.studio:has([data-menu][aria-expanded="true"]) .studio__scene-caption {
+  visibility: hidden;
+}
+.studio__gestures {
+  position: absolute;
+  bottom: 2.7rem;
+  left: var(--studio-gutter);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--studio-muted);
+  font-size: 0.62rem;
+  pointer-events: none;
+}
+.studio__gestures i {
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.studio:not(.is-engaged) .studio__gestures {
+  display: none;
+}
+.studio__gesture-icon {
+  color: var(--studio-accent);
+  font-size: 0.95rem;
+}
+.studio.is-opening .studio__hero {
+  visibility: hidden;
+}
+
+@media (min-width: 56.01rem) and (max-height: 800px) {
+  .studio.wall {
+    --hero-top: 8rem;
+    --headline-size: clamp(4.3rem, 6.7vw, 6.1rem);
+  }
+  .studio__eyebrow {
+    margin-bottom: 1.25rem;
+  }
+  .studio__title {
+    margin-bottom: 1.1rem;
+  }
+  .studio__description {
+    font-size: 0.8rem;
+  }
+  .studio__search-slot {
+    margin-top: 1.35rem;
+  }
+  .studio__stage {
+    top: 5rem;
+    bottom: 7.5rem;
+  }
+}
+@media (max-width: 56rem) {
+  .studio.wall {
+    --headline-size: clamp(2.2rem, 9.3vw, 3.2rem);
+  }
+  .studio__hero {
+    top: auto;
+    bottom: calc(2rem + env(safe-area-inset-bottom));
+    left: var(--studio-gutter);
+    width: calc(100% - 2 * var(--studio-gutter));
+    max-width: none;
+    text-align: center;
+  }
+  .studio__eyebrow {
+    display: none;
+  }
+  .studio__title {
+    margin: 0 0 0.9rem;
+    line-height: 1.07;
+    letter-spacing: -0.06em;
+  }
+  .studio__title-line {
+    display: inline-block;
+  }
+  .studio__title-line--light {
+    margin-left: 0.08em;
+  }
+  .studio__description {
+    font-size: 0.77rem;
+    line-height: 1.65;
+  }
+  .studio__search-slot {
+    width: min(26rem, 100%);
+    height: 3.25rem;
+    margin: 1.15rem auto 0;
+  }
+  .studio:not(.is-engaged) .wall__results {
+    inset: auto 0 calc(100% + 0.5rem);
+    max-height: min(45svh, calc(var(--search-top, 50svh) - 5.5rem));
+  }
+  .studio__actions {
+    justify-content: center;
+    gap: 1.7rem;
+    margin-top: 0.85rem;
+  }
+  .studio__actions button {
+    min-height: 2.7rem;
+    padding: 0.6rem 1.1rem;
+    font-size: 0.72rem;
+  }
+  .studio__stage {
+    top: 4.4rem;
+    right: 0;
+    bottom: calc(var(--hero-height, 15rem) + 6.2rem + env(safe-area-inset-bottom));
+    width: 100%;
+    max-width: none;
+  }
+  .studio__edition,
+  .studio__gestures {
+    display: none;
+  }
+}
+@media (min-width: 600px) and (max-width: 56rem) {
+  .studio__hero {
+    bottom: 3rem;
+  }
+  .studio__stage {
+    bottom: calc(var(--hero-height, 15rem) + 7.3rem);
+  }
+}
+@media (max-width: 56rem) and (max-height: 680px) {
+  .studio.wall {
+    --headline-size: 2.15rem;
+  }
+  .studio__hero {
+    bottom: 1rem;
+  }
+  .studio__title {
+    margin-bottom: 0.65rem;
+  }
+  .studio__description {
+    font-size: 0.7rem;
+  }
+  .studio__search-slot {
+    height: 3rem;
+    margin-top: 0.85rem;
+  }
+  .studio__actions {
+    margin-top: 0.65rem;
+  }
+  .studio__actions button {
+    min-height: 2.4rem;
+    font-size: 0.65rem;
+  }
+  .studio__stage {
+    top: 4.1rem;
+    bottom: calc(var(--hero-height, 15rem) + 5rem);
+  }
+  .studio__pause {
+    min-height: 2.3rem;
+    height: 2.3rem;
+  }
+}
+@media (max-width: 56rem) and (max-height: 500px) and (orientation: landscape) {
+  .studio.wall {
+    --headline-size: 2.65rem;
+  }
+  .studio__hero {
+    top: 5.8rem;
+    bottom: auto;
+    width: 45%;
+    text-align: left;
+  }
+  .studio__title {
+    margin-bottom: 1rem;
+  }
+  .studio__title-line {
+    display: block;
+  }
+  .studio__title-line--light {
+    margin-left: -0.06em;
+  }
+  .studio__description {
+    display: none;
+  }
+  .studio__search-slot {
+    margin-top: 0;
+  }
+  .studio__actions {
+    justify-content: flex-start;
+    gap: 1rem;
+  }
+  .studio__stage {
+    top: 3.5rem;
+    bottom: 4.2rem;
+    width: 51%;
+  }
+}

@@ -3,9 +3,6 @@ import { SITE } from "@/lib/site";
 export function ExplorerToolbar() {
   return (
     <header className="wall__bar">
-      <div className="studio__header-label" aria-hidden="true">
-        <span /> The color playground
-      </div>
       <form className="wall__find" data-find="" role="search" autoComplete="off">
         <label className="wall__picker" title="Pick a color">
           <input
@@ -24,7 +21,7 @@ export function ExplorerToolbar() {
           spellCheck="false"
         />
         <span className="wall__hint" data-hint="" aria-hidden="true">
-          {"Find a color, a feeling, a hex…"}
+          {"Search a name or a hex code"}
         </span>
         <button
           type="button"
