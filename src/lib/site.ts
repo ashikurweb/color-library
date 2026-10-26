@@ -2,6 +2,7 @@ export const SITE = {
   name: "Ashikur Rahman",
   copyrightOwner: "Ashikur Rahman",
   github: "https://github.com/ashikurweb",
+  repository: "https://github.com/ashikurweb/color-library",
   description:
     "Explore 31,993 named colors in an interactive atlas. Find your shade, compare palettes, and make it your own.",
   colorCount: 31_993,

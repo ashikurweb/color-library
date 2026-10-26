@@ -8,7 +8,7 @@ export function Colophon() {
           {SITE.name}
           <span data-version="" />
         </a>
-        <a href={SITE.github} target="_blank" rel="noopener noreferrer">
+        <a href={SITE.repository} target="_blank" rel="noopener noreferrer">
           GitHub
         </a>
         <a href="/data/colors.json" download>

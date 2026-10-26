@@ -46,7 +46,7 @@ export function ExplorerToolbar() {
         <ul className="wall__results" data-results="" hidden></ul>
       </form>
       <nav className="wall__nav" aria-label="Project">
-        <a className="studio__github" href={SITE.github} target="_blank" rel="noopener noreferrer">
+        <a className="studio__github" href={SITE.repository} target="_blank" rel="noopener noreferrer">
           {"GitHub"} <span aria-hidden="true">↗</span>
         </a>
         <a className="studio__create" href="/adopt/" data-magnetic="">

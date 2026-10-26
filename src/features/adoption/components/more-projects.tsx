@@ -39,7 +39,7 @@ export function MoreProjects() {
       </ul>
       <nav className="footer__nav" aria-label="More">
         <a href="/">{SITE.name}</a>
-        <a href={SITE.github} target="_blank" rel="noopener noreferrer">
+        <a href={SITE.repository} target="_blank" rel="noopener noreferrer">
           GitHub
         </a>
         <a href="/license/">License</a>
